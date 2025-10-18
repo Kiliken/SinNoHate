@@ -1,1 +1,2 @@
-# SinNoHate
+# 罪(Sin)の果て
+
