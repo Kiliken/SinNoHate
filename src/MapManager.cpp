@@ -45,6 +45,19 @@ void Map::GenerateMap()
 }
 
 
+// proceed to next layer of the map
+void Map::GoToNextLayer()
+{
+    if (currentLayer < layerCount - 1)
+    {
+        currentLayer++;
+        Console << U"Moved to layer " << currentLayer;
+
+        CreateTraps(); // Recreate traps for the new layer
+    }
+}
+
+
 // create traps based on the map data
 void Map::CreateTraps()
 {
@@ -59,8 +72,7 @@ void Map::CreateTraps()
             int32 tileValue = currentMapLayer[y][x];
             if (GetType(tileValue) == TileType::trap)
             {
-                // damage set to 1 for now
-                traps.emplace_back(0, Point(x, y), 1); // type 0, position (x,y), damage 1
+                traps.emplace_back(0, Point(x, y), trapDamageValues[currentLayer]);
                 Console << U"Trap created at (" << x << U"," << y << U")";
             }
         }
@@ -110,6 +122,7 @@ void Map::DestroyTrap(const Trap& trap)
 }
 
 
+// change to actual texture later
 void Map::DrawTraps(Texture& trapTex) {
     for (const auto& trap : traps) {
         Vec2 pos(trap.position.x * tileSize, trap.position.y * tileSize);
@@ -125,6 +138,7 @@ void Map::Draw(Texture& mapTex) {
             const int32 tile = map[currentLayer][y][x];
             int sprite = GetSprite(tile);
             Vec2 pos(x * tileSize, y * tileSize);
+            // y will be current layer later
             mapTex(sprite * tileSize, 0, tileSize, tileSize).draw(pos);
             // if (GetType(tile) == TileType::trap)
             //     mapTex(10 * tileSize, 0, tileSize, tileSize).draw(pos);
