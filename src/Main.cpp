@@ -1,5 +1,6 @@
 ﻿# include <Siv3D.hpp> // Siv3D v0.6.16
 #include "MapManager.h"
+#include "PlayerP.h" // placeholder player class
 
 void Main()
 {
@@ -12,8 +13,11 @@ void Main()
     // Create map instance
     Map map;
 
+    Player player;
+
     while (System::Update())
     {
+        map.UpdateTraps(player); // update traps
         // Draw the map
         map.Draw(mapTexture);
     }

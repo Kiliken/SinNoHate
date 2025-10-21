@@ -1,5 +1,6 @@
 #pragma once
 #include <Siv3D.hpp> // Siv3D v0.6.16
+#include "PlayerP.h"    // placeholder player class, change later
 
 class Map{
 public:
@@ -9,12 +10,33 @@ public:
         trap,
     };
 
+    // trap struct
+    struct Trap {
+        int type = 0;
+        Point position;
+        int damage = 1;
+        bool activated = false;
+        Rect collider;
+
+        Trap(int t, Point pos, int dmg)
+            : type(t), position(pos), damage(dmg), activated(false),
+              collider(pos.x * tileSize, pos.y * tileSize, tileSize) {}
+    };
+
     int currentLayer = 0;
 
     Map();
 
     // map general
 	void Draw(Texture& mapTex);
+
+    // trap management
+    Array<Trap> traps;
+    void CreateTraps();
+    void ClearTraps(); // clear all traps
+    void UpdateTraps(Player& player); // update traps
+    void DrawTraps(Texture& trapTex); // draw traps
+    void DestroyTrap(const Trap& trap); // destroy a trap
 
     // enemy management
     //void CreateEnemies();
@@ -27,7 +49,11 @@ private:
 
     Array<Grid<int32>> map; // map with layers
 
+    Array<float> trapSpawnChances = { 0.01f, 0.02f, 0.03f, 0.04f, 0.05f, 0.06f, 0.07f, 0.08f }; // per layer
+    constexpr static int trapSpawnHeightThreshold = 15; // only spawn traps after this height
+
     void GenerateMap();
+    
 
     // bit accessors
 	// 00 - 07 bits: sprite index on texture
