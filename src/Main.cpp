@@ -19,14 +19,18 @@ void Main()
 
     while (System::Update())
     {
+        double deltaTime = Scene::DeltaTime();
+
+        // debug
         if(KeyE.down()) {
             map.GoToNextLayer();
             shop.ResetShop();
             shop.ShowShop();
         }
 
-        map.UpdateTraps(player); // update traps
+        map.UpdateMap(deltaTime, player);
         shop.UpdateShop(player); // update shop
+        
         // Draw the map
         map.Draw(mapTexture);
         shop.DrawShop();

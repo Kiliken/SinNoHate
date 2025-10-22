@@ -13,14 +13,15 @@ public:
     // trap struct
     struct Trap {
         int type = 0;
-        Point position;
+        Vec2 position;  // world position
         int damage = 1;
         bool activated = false;
         Rect collider;
+        Rect explosionCol;
 
-        Trap(int t, Point pos, int dmg)
+        Trap(int t, Vec2 pos, int dmg)
             : type(t), position(pos), damage(dmg), activated(false),
-              collider(pos.x * tileSize, pos.y * tileSize, tileSize) {}
+              collider(pos.x, pos.y, tileSize), explosionCol(pos.x, pos.y, tileSize * 1.5) {}
     };
 
     int currentLayer = 0;
@@ -29,6 +30,8 @@ public:
     Map();
 
     // map general
+    void UpdateMap(double deltaTime, Player& player);
+    void UpdateBackground(double deltaTime);
 	void Draw(Texture& mapTex);
     void GoToNextLayer();
 
@@ -36,9 +39,9 @@ public:
     Array<Trap> traps;
     void CreateTraps();
     void ClearTraps(); // clear all traps
-    void UpdateTraps(Player& player); // update traps
+    void UpdateTraps(double deltaTime, Player& player); // update traps
     void DrawTraps(Texture& trapTex); // draw traps
-    void DestroyTrap(const Trap& trap); // destroy a trap
+    void DestroyTrap(Trap& trap); // destroy a trap
 
     // enemy management
     //void CreateEnemies();
@@ -46,14 +49,25 @@ public:
 private:
     static constexpr int tileSize = 32; // 16?
     static constexpr int layerWidth = 16;
-    static constexpr int layerHeight = 60;
+    static constexpr int layerHeight = 16;
     static constexpr int layerCount = 8;
+
+    //static constexpr int bgRows = 16; // background tile rows in texture
+    Array<float> bgTileYPos; // y positions of background tiles in texture
+    float bgScrollSpeed = 60.0f; // background scroll speed
+
+    static constexpr float layerTime = 10.0f; // time per layer in seconds (excluding final layer)
+    float layerTimer = 0.0f;
 
     Array<Grid<int32>> map; // map with layers
 
-    Array<float> trapSpawnChances = { 0.01f, 0.02f, 0.03f, 0.04f, 0.05f, 0.06f, 0.07f, 0.08f }; // per layer
+    // trap parameters
+    //Array<float> trapSpawnChances = { 0.01f, 0.02f, 0.03f, 0.04f, 0.05f, 0.06f, 0.07f, 0.08f }; // per layer
+    Array<int> trapSpawnMaxCounts = { 3, 3, 4, 6, 6, 8, 10, 14 }; // per layer
     Array<int> trapDamageValues = { 1, 1, 1, 2, 2, 2, 3, 3 }; // per layer
-    constexpr static int trapSpawnHeightThreshold = 5; // only spawn traps after this height, 15
+    //constexpr static int trapSpawnHeightThreshold = 5; // only spawn traps after this height, 15
+    float trapSpawnTimer = 0.0f;
+    float trapSpawnInterval = 2.0f; // seconds
 
 
     void GenerateMap();
