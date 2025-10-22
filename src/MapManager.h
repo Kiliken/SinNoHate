@@ -16,6 +16,9 @@ public:
         Vec2 position;  // world position
         int damage = 1;
         bool activated = false;
+        bool damagedPlayer = false;
+        float timer = 0.0f;
+        float activeTime = 1.0f; // time before explosion
         Rect collider;
         Rect explosionCol;
 
@@ -25,6 +28,7 @@ public:
     };
 
     int currentLayer = 0;
+    bool layerSwitched = false; // to add delay between layers
 
 
     Map();
@@ -33,7 +37,8 @@ public:
     void UpdateMap(double deltaTime, Player& player);
     void UpdateBackground(double deltaTime);
 	void Draw(Texture& mapTex);
-    void GoToNextLayer();
+    void EndLayer();
+    void StartNextLayer();
 
     // trap management
     Array<Trap> traps;
@@ -68,9 +73,12 @@ private:
     //constexpr static int trapSpawnHeightThreshold = 5; // only spawn traps after this height, 15
     float trapSpawnTimer = 0.0f;
     float trapSpawnInterval = 2.0f; // seconds
+    bool spawningTraps = true;
 
 
     void GenerateMap();
+
+    bool CheckTrapCollisions(Player& player);
 
     // bit accessors
 	// 00 - 07 bits: sprite index on texture

@@ -23,14 +23,28 @@ void Main()
 
         // debug
         if(KeyE.down()) {
-            map.GoToNextLayer();
+            //map.GoToNextLayer();
             shop.ResetShop();
             shop.ShowShop();
         }
 
+        // handle layer switching and shop
+        if(map.layerSwitched) {
+            // wait for player to finish shopping
+            if(!shop.shopActive)
+                shop.ShowShop();
+
+            shop.UpdateShop(player);
+
+            if(shop.itemBought) {
+                map.StartNextLayer();
+                shop.ResetShop();
+            }
+        }
+
         map.UpdateMap(deltaTime, player);
-        shop.UpdateShop(player); // update shop
-        
+        //shop.UpdateShop(player); // update shop
+
         // Draw the map
         map.Draw(mapTexture);
         shop.DrawShop();

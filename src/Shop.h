@@ -21,6 +21,9 @@ public:
         Rect rect; // for clicking
     };
 
+    bool shopActive = false;
+    bool itemBought = false;
+
 
     Shop();
     void AddItems();    // randomly add 3 unrepetitive items
@@ -34,6 +37,4 @@ public:
 private:
     const Array<String> itemNames = { U"Heart", U"Bullet", U"Attack Damage", U"Attack Speed", U"Movement Speed" };  // placeholder names
     Array<Item> itemsInShop;   // 3 items
-    bool shopActive = false;
-    bool itemBought = false;
 };

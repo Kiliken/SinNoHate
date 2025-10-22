@@ -51,11 +51,13 @@ void Map::UpdateMap(double deltaTime, Player& player)
     UpdateBackground(deltaTime);
     UpdateTraps(deltaTime, player);
 
-    layerTimer += deltaTime;
-    // don't go to next layer if on final layer
-    if(layerTimer >= layerTime && currentLayer < layerCount - 1) {
-        layerTimer = 0.0f;
-        GoToNextLayer();
+    if(!layerSwitched){
+        layerTimer += deltaTime;
+        // don't go to next layer if on final layer
+        if(layerTimer >= layerTime && currentLayer < layerCount - 1) {
+            layerTimer = 0.0f;
+            EndLayer();
+        }
     }
 }
 
@@ -75,13 +77,25 @@ void Map::UpdateBackground(double deltaTime)
 
 
 // proceed to next layer of the map
-void Map::GoToNextLayer()
+void Map::EndLayer()
 {
+    ClearTraps(); // clear existing traps
+    spawningTraps = false; // stop spawning traps for current layer
+
     if (currentLayer < layerCount - 1)
     {
         currentLayer++;
-        Console << U"Moved to layer " << currentLayer;
+        Console << U"Layer cleared. Moved to layer " << currentLayer;
     }
+    layerSwitched = true;
+}
+
+
+void Map::StartNextLayer()
+{
+    spawningTraps = true; // resume spawning traps
+    layerSwitched = false;
+    Console << U"Started layer " << currentLayer;
 }
 
 
@@ -154,6 +168,7 @@ void Map::UpdateTraps(double deltaTime, Player& player)
         // move trap downwards
         trap.position.y -= bgScrollSpeed * deltaTime;
         trap.collider.setPos(trap.position.x, trap.position.y);
+        trap.explosionCol.setPos(trap.position.x, trap.position.y);
         // remove trap if it goes off screen
         if(trap.position.y < -tileSize) {
             DestroyTrap(trap);
@@ -162,11 +177,27 @@ void Map::UpdateTraps(double deltaTime, Player& player)
 
     for (auto& trap : traps)
     {
-        if(player.collider.intersects(trap.collider) && !trap.activated) {
-            player.currentHP -= trap.damage;
+        // check collision with player and bullets プレイヤーとの当たり判定を確認
+        if(CheckTrapCollisions(player) && !trap.activated) {
             trap.activated = true;
-            Console << U"Player hit a trap! Current HP: " << player.currentHP;
-            DestroyTrap(trap);
+            Console << U"Trap at (" << trap.position.x << U"," << trap.position.y << U") activated!";
+        }
+        else if(trap.activated) {
+            // after activation, check explosion collision
+            if(player.collider.intersects(trap.explosionCol) && !trap.damagedPlayer) {
+                player.currentHP -= trap.damage; // apply damage again
+                trap.damagedPlayer = true;
+                Console << U"Player hit by trap explosion! Current HP: " << player.currentHP;
+            }
+
+            // CHECK ENEMY COLLISION HERE
+
+            // update timer
+            trap.timer += deltaTime;
+            if(trap.timer >= trap.activeTime) {
+                // after active time, destroy the trap
+                DestroyTrap(trap);
+            }
         }
     }
 
@@ -174,8 +205,32 @@ void Map::UpdateTraps(double deltaTime, Player& player)
     trapSpawnTimer += deltaTime;
     if(trapSpawnTimer >= trapSpawnInterval) {
         trapSpawnTimer = 0.0f;
-        CreateTraps();
+        if(spawningTraps)
+            CreateTraps();
     }
+}
+
+
+// check for collisions between player and its bullets and traps
+bool Map::CheckTrapCollisions(Player& player)
+{
+    for (const auto& trap : traps)
+    {
+        if (player.collider.intersects(trap.collider))
+        {
+            return true; // Collision detected
+        }
+        
+        for(const auto& bullet : player.bullets) {
+            if(bullet.collider.intersects(trap.collider)) {
+                // destroy bullet here later
+
+                return true; // Collision detected
+            }
+        }
+
+    }
+    return false; // No collision
 }
 
 
