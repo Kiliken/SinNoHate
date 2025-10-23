@@ -1,6 +1,6 @@
 #pragma once
 #include <Siv3D.hpp> // Siv3D v0.6.16
-#include "PlayerP.h"    // placeholder player class, change later
+#include "Player/PlayerController.h"
 
 class Map{
 public:
@@ -19,12 +19,16 @@ public:
         bool damagedPlayer = false;
         float timer = 0.0f;
         float activeTime = 1.0f; // time before explosion
+        float explosionSize = tileSize * 1.5f;
+        float explosionOffset = tileSize * 0.25f;
+
         Rect collider;
         Rect explosionCol;
-
+        
         Trap(int t, Vec2 pos, int dmg)
             : type(t), position(pos), damage(dmg), activated(false),
-              collider(pos.x, pos.y, tileSize), explosionCol(pos.x, pos.y, tileSize * 1.5) {}
+                // set explosion collider 1.5 times bigger than trap collider
+              collider(pos.x, pos.y, tileSize), explosionCol(pos.x - explosionOffset, pos.y - explosionOffset, explosionSize){}
     };
 
     int currentLayer = 0;
@@ -34,7 +38,7 @@ public:
     Map();
 
     // map general
-    void UpdateMap(double deltaTime, Player& player);
+    void UpdateMap(double deltaTime, PlayerController& player);
     void UpdateBackground(double deltaTime);
 	void Draw(Texture& mapTex);
     void EndLayer();
@@ -44,7 +48,7 @@ public:
     Array<Trap> traps;
     void CreateTraps();
     void ClearTraps(); // clear all traps
-    void UpdateTraps(double deltaTime, Player& player); // update traps
+    void UpdateTraps(double deltaTime, PlayerController& player); // update traps
     void DrawTraps(Texture& trapTex); // draw traps
     void DestroyTrap(Trap& trap); // destroy a trap
 
@@ -57,20 +61,17 @@ private:
     static constexpr int layerHeight = 16;
     static constexpr int layerCount = 8;
 
-    //static constexpr int bgRows = 16; // background tile rows in texture
     Array<float> bgTileYPos; // y positions of background tiles in texture
     float bgScrollSpeed = 60.0f; // background scroll speed
 
-    static constexpr float layerTime = 10.0f; // time per layer in seconds (excluding final layer)
+    static constexpr float layerTime = 30.0f; // time per layer in seconds (excluding final layer)
     float layerTimer = 0.0f;
 
     Array<Grid<int32>> map; // map with layers
 
     // trap parameters
-    //Array<float> trapSpawnChances = { 0.01f, 0.02f, 0.03f, 0.04f, 0.05f, 0.06f, 0.07f, 0.08f }; // per layer
     Array<int> trapSpawnMaxCounts = { 3, 3, 4, 6, 6, 8, 10, 14 }; // per layer
     Array<int> trapDamageValues = { 1, 1, 1, 2, 2, 2, 3, 3 }; // per layer
-    //constexpr static int trapSpawnHeightThreshold = 5; // only spawn traps after this height, 15
     float trapSpawnTimer = 0.0f;
     float trapSpawnInterval = 2.0f; // seconds
     bool spawningTraps = true;
@@ -78,7 +79,7 @@ private:
 
     void GenerateMap();
 
-    bool CheckTrapCollisions(Player& player);
+    bool CheckTrapCollisions(Trap& trap, PlayerController& player);
 
     // bit accessors
 	// 00 - 07 bits: sprite index on texture

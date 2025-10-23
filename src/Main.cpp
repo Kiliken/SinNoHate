@@ -1,6 +1,6 @@
 ﻿# include <Siv3D.hpp> // Siv3D v0.6.16
 #include "MapManager.h"
-#include "PlayerP.h" // placeholder player class
+#include "Player/PlayerController.h"
 #include "Shop.h"
 
 
@@ -15,7 +15,7 @@ void Main()
     
     Map map;    // Create map instance
     Shop shop;  // Create shop instance
-    Player player;  // placeholder player instance
+    PlayerController playerController({ 256.0f, 240.0f }); // Create player controller instance
 
     while (System::Update())
     {
@@ -34,7 +34,7 @@ void Main()
             if(!shop.shopActive)
                 shop.ShowShop();
 
-            shop.UpdateShop(player);
+            shop.UpdateShop(playerController);
 
             if(shop.itemBought) {
                 map.StartNextLayer();
@@ -42,11 +42,13 @@ void Main()
             }
         }
 
-        map.UpdateMap(deltaTime, player);
+        map.UpdateMap(deltaTime, playerController);
         //shop.UpdateShop(player); // update shop
+        playerController.Update(deltaTime);
 
         // Draw the map
         map.Draw(mapTexture);
+        playerController.Draw(deltaTime);
         shop.DrawShop();
 
     }

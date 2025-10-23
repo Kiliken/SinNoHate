@@ -1,6 +1,6 @@
 #pragma once
 #include <Siv3D.hpp> // Siv3D v0.6.16
-#include "PlayerP.h"    // placeholder player class, change later
+#include "Player/PlayerController.h"
 
 class Shop {
 public:
@@ -27,11 +27,11 @@ public:
 
     Shop();
     void AddItems();    // randomly add 3 unrepetitive items
-    void BuyItem(ItemType item, Player& player);
+    void BuyItem(ItemType item, PlayerController& player);
     void ShowShop();
     void DrawShop();
     void ResetShop();
-    void UpdateShop(Player& player); // handle input
+    void UpdateShop(PlayerController& player); // handle input
 
 
 private:

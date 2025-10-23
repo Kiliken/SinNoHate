@@ -28,4 +28,6 @@ class BulletBase{
         void Draw();
 
         void OnHit();
+
+        Circle* GetCollider() { return &m_sprite; }
 };

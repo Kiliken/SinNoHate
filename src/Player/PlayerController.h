@@ -73,6 +73,15 @@ class PlayerController{
         /// @brief ライフ回復処理
         void HealLife();
 
+        /// @brief 最大ライフを増加させる
+        void IncreaseMaxLife(int addValue);
+
+        /// @brief 現在のライフを取得
+        int Life() const { return m_life; }
+
+        /// @brief 最大ライフを取得
+        int MaxLife() const { return m_maxLife; }
+
         /// @brief 各状態の更新処理
         /// @param deltaTime 微小時間
         void Update(double deltaTime);
@@ -85,4 +94,7 @@ class PlayerController{
 
         /// @brief 当たり判定を取得
         Circle* Collider();
+
+        /// @brief 弾の配列を取得
+        Array<BulletBase*>& GetBullets() { return m_bullets; }
 };

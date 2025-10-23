@@ -25,16 +25,6 @@ void Map::GenerateMap()
                     SetType(tileValue, TileType::wall);
                     SetSprite(tileValue, 1); // wall sprite index
                 }
-                // else if (y > trapSpawnHeightThreshold && RandomBool(trapSpawnChances[layerIndex]))  // random trap placement
-                // {
-                //     SetType(tileValue, TileType::trap);
-                //     //SetSprite(tileValue, 0); // trap sprite index
-                // }
-                else
-                {
-                    //SetType(tileValue, TileType::normal);
-                    //SetSprite(tileValue, 0); // normal sprite index
-                }
 
                 layer[y][x] = tileValue;
             }
@@ -46,7 +36,7 @@ void Map::GenerateMap()
 }
 
 
-void Map::UpdateMap(double deltaTime, Player& player)
+void Map::UpdateMap(double deltaTime, PlayerController& player)
 {
     UpdateBackground(deltaTime);
     UpdateTraps(deltaTime, player);
@@ -99,27 +89,6 @@ void Map::StartNextLayer()
 }
 
 
-// create traps based on the map data OLD
-// void Map::CreateTraps()
-// {
-//     ClearTraps(); // Clear existing traps
-
-//     const auto& currentMapLayer = map[currentLayer];
-
-//     for (int y = 0; y < layerHeight; ++y)
-//     {
-//         for (int x = 0; x < layerWidth; ++x)
-//         {
-//             int32 tileValue = currentMapLayer[y][x];
-//             if (GetType(tileValue) == TileType::trap)
-//             {
-//                 traps.emplace_back(0, Point(x, y), trapDamageValues[currentLayer]);
-//                 Console << U"Trap created at (" << x << U"," << y << U")";
-//             }
-//         }
-//     }
-// }
-
 // create traps at random times/positions based on spawn chance and max count
 void Map::CreateTraps()
 {
@@ -154,7 +123,7 @@ void Map::ClearTraps()
 
 
 // check for player collision with traps
-void Map::UpdateTraps(double deltaTime, Player& player)
+void Map::UpdateTraps(double deltaTime, PlayerController& player)
 {
     // DEBUG
     // if(KeySpace.down()){
@@ -168,7 +137,7 @@ void Map::UpdateTraps(double deltaTime, Player& player)
         // move trap downwards
         trap.position.y -= bgScrollSpeed * deltaTime;
         trap.collider.setPos(trap.position.x, trap.position.y);
-        trap.explosionCol.setPos(trap.position.x, trap.position.y);
+        trap.explosionCol.setPos(trap.position.x - trap.explosionOffset, trap.position.y - trap.explosionOffset);
         // remove trap if it goes off screen
         if(trap.position.y < -tileSize) {
             DestroyTrap(trap);
@@ -178,16 +147,17 @@ void Map::UpdateTraps(double deltaTime, Player& player)
     for (auto& trap : traps)
     {
         // check collision with player and bullets プレイヤーとの当たり判定を確認
-        if(CheckTrapCollisions(player) && !trap.activated) {
+        if(CheckTrapCollisions(trap, player) && !trap.activated) {
             trap.activated = true;
             Console << U"Trap at (" << trap.position.x << U"," << trap.position.y << U") activated!";
         }
         else if(trap.activated) {
             // after activation, check explosion collision
-            if(player.collider.intersects(trap.explosionCol) && !trap.damagedPlayer) {
-                player.currentHP -= trap.damage; // apply damage again
+            if(player.Collider()->intersects(trap.explosionCol) && !trap.damagedPlayer) {
+                //player.currentHP -= trap.damage; // apply damage again
+                player.OnDamage(); // apply damage through method
                 trap.damagedPlayer = true;
-                Console << U"Player hit by trap explosion! Current HP: " << player.currentHP;
+                Console << U"Player hit by trap explosion! Current HP: " << player.Life();
             }
 
             // CHECK ENEMY COLLISION HERE
@@ -212,24 +182,24 @@ void Map::UpdateTraps(double deltaTime, Player& player)
 
 
 // check for collisions between player and its bullets and traps
-bool Map::CheckTrapCollisions(Player& player)
+bool Map::CheckTrapCollisions(Trap& trap, PlayerController& player)
 {
-    for (const auto& trap : traps)
+    if (player.Collider()->intersects(trap.collider))
     {
-        if (player.collider.intersects(trap.collider))
-        {
+        Console << U"Player collided with trap at (" << trap.position.x << U"," << trap.position.y << U")";
+        return true; // Collision detected
+    }
+    
+    for(const auto& bullet : player.GetBullets()) {
+        if(bullet->GetCollider()->intersects(trap.collider)) {
+            Console << U"Bullet collided with trap at (" << trap.position.x << U"," << trap.position.y << U")";
+            // destroy bullet here
+            bullet->OnHit();
+
             return true; // Collision detected
         }
-        
-        for(const auto& bullet : player.bullets) {
-            if(bullet.collider.intersects(trap.collider)) {
-                // destroy bullet here later
-
-                return true; // Collision detected
-            }
-        }
-
     }
+
     return false; // No collision
 }
 
@@ -250,6 +220,11 @@ void Map::DestroyTrap(Trap& trap)
 void Map::DrawTraps(Texture& trapTex) {
     for (const auto& trap : traps) {
         Vec2 pos(trap.position.x, trap.position.y);
+        if(trap.activated)
+            // draw explosion
+            trap.explosionCol.draw(Palette::Orange);
+        
+        trap.collider.draw(Palette::Red); // draw collider for debugging
         trapTex(10 * tileSize, 0, tileSize, tileSize).draw(pos); // assuming trap sprite is at index 10
     }
 }

@@ -32,12 +32,11 @@ void Shop::AddItems() {
 
 
 // placeholder buy item function
-void Shop::BuyItem(ItemType item, Player& player) {
+void Shop::BuyItem(ItemType item, PlayerController& player) {
     switch (item) {
     case heart:
-        player.maxHP += 1;
-        player.currentHP += 1;
-        Console << U"Bought Heart! Max HP: " << player.maxHP;
+        player.IncreaseMaxLife(1);
+        Console << U"Bought Heart! Max HP: " << player.MaxLife();
         break;
     case bullet:
         // Implement bullet upgrade
@@ -75,7 +74,7 @@ void Shop::ResetShop() {
 }
 
 
-void Shop::UpdateShop(Player& player) {
+void Shop::UpdateShop(PlayerController& player) {
     if (!shopActive) return;
 
     if (MouseL.down() && !itemBought) {

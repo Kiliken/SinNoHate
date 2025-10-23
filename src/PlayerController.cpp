@@ -13,7 +13,11 @@ void PlayerController::UpdateBullets(double deltaTime)
 
     for (auto& bullet : m_bullets){
         bullet->Update(deltaTime);
-        bullet->Draw();
+
+        // 非アクティブ化した弾を配列から削除
+        if(!bullet->IsActive()){
+            m_bullets.remove(bullet);
+        }
     }
 }
 
@@ -114,7 +118,7 @@ PlayerController::PlayerController(Vec2 firstPosition)
     m_firstPosition = firstPosition;
     m_position = m_firstPosition;
     m_sprite = Texture{ U"😇"_emoji };
-    m_collider = Circle{ m_position, m_sprite.size() };
+    m_collider = Circle{ m_position, 16.0 };
 }
 
 PlayerController::~PlayerController() noexcept
@@ -133,6 +137,12 @@ void PlayerController::OnDamage()
 void PlayerController::HealLife()
 {
     UpdateLife(1);
+}
+
+void PlayerController::IncreaseMaxLife(int addValue)
+{
+    m_maxLife += addValue;
+    m_life += addValue;
 }
 
 void PlayerController::UpdateLife(int addValue)
@@ -154,9 +164,13 @@ void PlayerController::Update(double deltaTime)
 
 void PlayerController::Draw(double deltaTime)
 {
-    m_collider.scaled(0.2).draw(Palette::Red);
+    m_collider.draw(Palette::Red);
     m_sprite.drawAt( m_position );
     m_shootPos.draw(Palette::Aqua);
+
+    for (auto& bullet : m_bullets){
+        bullet->Draw();
+    }
 }
 
 void PlayerController::OnLastLayer()
