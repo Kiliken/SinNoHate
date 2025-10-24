@@ -36,10 +36,10 @@ void Map::GenerateMap()
 }
 
 
-void Map::UpdateMap(double deltaTime, PlayerController& player)
+void Map::UpdateMap(double deltaTime, PlayerController& player, Array<Enemy>* enemies)
 {
     UpdateBackground(deltaTime);
-    UpdateTraps(deltaTime, player);
+    UpdateTraps(deltaTime, player, enemies);
 
     if(!layerSwitched){
         layerTimer += deltaTime;
@@ -123,7 +123,7 @@ void Map::ClearTraps()
 
 
 // check for player collision with traps
-void Map::UpdateTraps(double deltaTime, PlayerController& player)
+void Map::UpdateTraps(double deltaTime, PlayerController& player, Array<Enemy>* enemies)
 {
     // DEBUG
     // if(KeySpace.down()){
@@ -161,6 +161,15 @@ void Map::UpdateTraps(double deltaTime, PlayerController& player)
             }
 
             // CHECK ENEMY COLLISION HERE
+            for (auto enemy = enemies->begin(); enemy != enemies->end();){
+                if(enemy->GetCollider().intersects(trap.explosionCol)){
+                    enemy = enemies->erase(enemy);
+                    Print << U"Enemy BOOM!";
+                    continue;
+                }
+
+                ++enemy;
+            }
 
             // update timer
             trap.timer += deltaTime;

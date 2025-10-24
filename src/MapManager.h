@@ -1,6 +1,7 @@
 #pragma once
 #include <Siv3D.hpp> // Siv3D v0.6.16
 #include "Player/PlayerController.h"
+#include "Enemy.h"
 
 class Map{
 public:
@@ -38,7 +39,7 @@ public:
     Map();
 
     // map general
-    void UpdateMap(double deltaTime, PlayerController& player);
+    void UpdateMap(double deltaTime, PlayerController& player, Array<Enemy>* enemies);
     void UpdateBackground(double deltaTime);
 	void Draw(Texture& mapTex);
     void EndLayer();
@@ -48,7 +49,7 @@ public:
     Array<Trap> traps;
     void CreateTraps();
     void ClearTraps(); // clear all traps
-    void UpdateTraps(double deltaTime, PlayerController& player); // update traps
+    void UpdateTraps(double deltaTime, PlayerController& player, Array<Enemy>* enemies); // update traps
     void DrawTraps(Texture& trapTex); // draw traps
     void DestroyTrap(Trap& trap); // destroy a trap
 

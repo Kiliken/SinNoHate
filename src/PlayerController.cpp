@@ -132,6 +132,7 @@ PlayerController::~PlayerController() noexcept
 void PlayerController::OnDamage()
 {
     UpdateLife(-1);
+    //Print << U"OUCH";
 }
 
 void PlayerController::HealLife()
