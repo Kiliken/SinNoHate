@@ -33,7 +33,7 @@ void Main()
 	// Enemy
 	
 	//Array<Vec2> enemies = { GenerateEnemy() };
-	Array<Enemy> newEnemies = { Enemy(GenerateEnemy(), 1, 1) };
+	Array<Enemy> newEnemies = { Enemy(GenerateEnemy(), 1, 1, &playerPos) };
 	// Player shots
 	Array<Vec2> playerBullets;
 	// Enemy shots
@@ -90,7 +90,7 @@ void Main()
 			enemyAccumulatedTime -= enemySpawnTime;
 			enemySpawnTime = Max(enemySpawnTime * 0.95, 0.3);
 			//enemies << GenerateEnemy();
-			newEnemies << Enemy(GenerateEnemy(), RandomUint8() % 4, RandomUint8() % 4);
+			newEnemies << Enemy(GenerateEnemy(), RandomUint8() % 4, RandomUint8() % 4, &playerPos);
 		}
 
 		// Player movement
@@ -114,15 +114,13 @@ void Main()
 		playerBullets.remove_if([](const Vec2& b) { return (b.y < -40); });
 
         
-		for (auto& enemy : newEnemies)
+		for (auto enemy = newEnemies.begin(); enemy != newEnemies.end();)
 		{
-            
-			if(enemy.Update()){
-                newEnemies.remove_at(i);
-            }
-            ++i;
+			if(enemy->Update())
+				enemy = newEnemies.erase(enemy);
+			
+			++enemy;
 		}
-        i = 0;
 		/*
 		// Move enemies
 		for (auto& enemy : enemies)

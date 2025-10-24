@@ -3,7 +3,7 @@
 
 class Enemy {
 public:
-    Enemy(Vec2 spawnPos, int8_t t, int8_t speedType);
+    Enemy(Vec2 spawnPos, int8_t t, int8_t speedType, Vec2* pPos);
     ~Enemy();
 
 private:

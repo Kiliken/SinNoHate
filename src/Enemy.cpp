@@ -1,12 +1,14 @@
 #include "Enemy.h"
 
-Enemy::Enemy(Vec2 spawnPos, int8_t t, int8_t speedType)
+Enemy::Enemy(Vec2 spawnPos, int8_t t, int8_t speedType, Vec2* pPos)
 {
     // textureAsset constant
     enemyTexture = TextureAsset(U"EnemyTexture");
     enemyPos = spawnPos;
     enemyType = t;
     enemySpeed = speedType * 10;
+    playerPos = pPos;
+
     switch (enemyType)
     {
     case 1:
@@ -24,7 +26,7 @@ Enemy::Enemy(Vec2 spawnPos, int8_t t, int8_t speedType)
 
 Enemy::~Enemy()
 {
-    //Print << U"Enemy Removed";
+    
 }
 
 bool Enemy::Update()
@@ -32,9 +34,9 @@ bool Enemy::Update()
     const double deltaTime = Scene::DeltaTime();
     enemyPos.y -= (deltaTime * EnemySpeed);
 
-    if (enemyPos.distanceFrom(*playerPos) <= 20)
+    if (enemyPos.distanceFrom(*playerPos) <= 40)
     {
-        // take damage
+        //player takes damage
     }
 
 
