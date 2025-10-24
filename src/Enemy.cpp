@@ -2,7 +2,7 @@
 
 Enemy::Enemy(Vec2 spawnPos, int8_t t, int8_t speedType)
 {
-    //textureAsset constant
+    // textureAsset constant
     enemyTexture = TextureAsset(U"EnemyTexture");
     enemyPos = spawnPos;
     enemyType = t;
@@ -10,24 +10,24 @@ Enemy::Enemy(Vec2 spawnPos, int8_t t, int8_t speedType)
     switch (enemyType)
     {
     case 1:
-        enemyColor = ColorF(0.5,0,0);
+        enemyColor = ColorF(0.5, 0, 0);
         break;
-    
+
     case 2:
-        enemyColor = ColorF(0,0.5,0);
+        enemyColor = ColorF(0, 0.5, 0);
         break;
     case 3:
-        enemyColor = ColorF(0,0,0.5);
+        enemyColor = ColorF(0, 0, 0.5);
         break;
     }
 }
 
 Enemy::~Enemy()
 {
-
+    //Print << U"Enemy Removed";
 }
 
-void Enemy::Update()
+bool Enemy::Update()
 {
     const double deltaTime = Scene::DeltaTime();
     enemyPos.y -= (deltaTime * EnemySpeed);
@@ -36,10 +36,19 @@ void Enemy::Update()
     {
         // take damage
     }
+
+
+    if(enemyPos.y < -20)
+        return true;
+
+    return false;
 }
 
 void Enemy::Draw()
 {
-    
+
     enemyTexture.resized(50).drawAt(enemyPos, enemyColor);
 }
+
+
+

@@ -22,8 +22,6 @@ private:
 
 public:
 
-    void Update();
+    bool Update();
     void Draw();
-
-    
 };

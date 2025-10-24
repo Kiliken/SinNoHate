@@ -72,11 +72,13 @@ void Main()
 	// Current score
 	int32 score = 0;
 
+    int i = 0;
+
 	while (System::Update())
 	{
 		// Game over check
 		bool gameover = false;
-
+        //const uint8_t randCicle = RandomUint8();
 		const double deltaTime = Scene::DeltaTime();
 		enemyAccumulatedTime += deltaTime;
 		playerShotTimer = Min((playerShotTimer + deltaTime), PlayerShotCoolTime);
@@ -88,7 +90,7 @@ void Main()
 			enemyAccumulatedTime -= enemySpawnTime;
 			enemySpawnTime = Max(enemySpawnTime * 0.95, 0.3);
 			//enemies << GenerateEnemy();
-			newEnemies << Enemy(GenerateEnemy(), 1, 1);
+			newEnemies << Enemy(GenerateEnemy(), RandomUint8() % 4, RandomUint8() % 4);
 		}
 
 		// Player movement
@@ -111,11 +113,16 @@ void Main()
 		// Remove player shots that went off screen
 		playerBullets.remove_if([](const Vec2& b) { return (b.y < -40); });
 
-
+        
 		for (auto& enemy : newEnemies)
 		{
-			enemy.Update();
+            
+			if(enemy.Update()){
+                newEnemies.remove_at(i);
+            }
+            ++i;
 		}
+        i = 0;
 		/*
 		// Move enemies
 		for (auto& enemy : enemies)
