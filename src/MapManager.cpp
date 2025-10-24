@@ -8,6 +8,8 @@ Map::Map()
 
 void Map::GenerateMap()
 {
+    mapTexture = TextureAsset(U"MapTexture");
+
     map.resize(layerCount);
     for(int layerIndex = 0; layerIndex < layerCount; ++layerIndex){
         auto& layer = map[layerIndex];
@@ -18,12 +20,18 @@ void Map::GenerateMap()
             for (int x = 0; x < layerWidth; ++x)
             {
                 int32 tileValue = 0;
-
+                
                 // Simple procedural generation logic
                 if (x == 0 || x == layerWidth - 1)  // walls on the sides
                 {
                     SetType(tileValue, TileType::wall);
-                    SetSprite(tileValue, 1); // wall sprite index
+                    if(layerIndex % 2 == 0)
+                        SetSprite(tileValue, SpriteIndex::wall1); // wall 1 sprite index
+                    else
+                        SetSprite(tileValue, SpriteIndex::wall2); // wall 2 sprite index
+                }
+                else if(Random(0, 1) == 0) {
+                    SetSprite(tileValue, SpriteIndex::bg2); // background 2 sprite index
                 }
 
                 layer[y][x] = tileValue;
@@ -195,7 +203,7 @@ bool Map::CheckTrapCollisions(Trap& trap, PlayerController& player)
 {
     if (player.Collider()->intersects(trap.collider))
     {
-        Console << U"Player collided with trap at (" << trap.position.x << U"," << trap.position.y << U")";
+        //Console << U"Player collided with trap at (" << trap.position.x << U"," << trap.position.y << U")";
         return true; // Collision detected
     }
     
@@ -226,32 +234,35 @@ void Map::DestroyTrap(Trap& trap)
 
 
 // change to actual texture later
-void Map::DrawTraps(Texture& trapTex) {
+void Map::DrawTraps() {
     for (const auto& trap : traps) {
         Vec2 pos(trap.position.x, trap.position.y);
         if(trap.activated)
             // draw explosion
             trap.explosionCol.draw(Palette::Orange);
         
-        trap.collider.draw(Palette::Red); // draw collider for debugging
-        trapTex(10 * tileSize, 0, tileSize, tileSize).draw(pos); // assuming trap sprite is at index 10
+        //trap.collider.draw(Palette::Red); // draw collider for debugging
+        mapTexture(SpriteIndex::trapActive * tileSize, 0, tileSize, tileSize).draw(pos); // assuming trap sprite is at index 10
     }
 }
 
 
 // draw the map on the screen
-void Map::Draw(Texture& mapTex) {
+void Map::Draw() {
     for (int y = 0; y < layerHeight; y++) {
         for (int x = 0; x < layerWidth; x++) {
             const int32 tile = map[currentLayer][y][x];
             int sprite = GetSprite(tile);
             Vec2 pos(x * tileSize, Math::Round(bgTileYPos[y]));
             // y will be current layer later
-            mapTex(sprite * tileSize, 0, tileSize, tileSize).draw(pos);
+            if(x == layerWidth - 1)
+               mapTexture(sprite * tileSize, 0, tileSize, tileSize).mirrored().draw(pos);
+            else
+                mapTexture(sprite * tileSize, 0, tileSize, tileSize).draw(pos);
             // if (GetType(tile) == TileType::trap)
             //     mapTex(10 * tileSize, 0, tileSize, tileSize).draw(pos);
         }
     }
 
-    DrawTraps(mapTex); // draw traps on top of the map
+    DrawTraps(); // draw traps on top of the map
 }

@@ -1,4 +1,5 @@
 #include "Player/PlayerController.h"
+#include "MapManager.h"
 
 void PlayerController::Aiming()
 {
@@ -69,7 +70,7 @@ void PlayerController::Move(Vec2 velocity, double deltaTime)
 {
     velocity.y *= -1;
     m_position += velocity * deltaTime;
-    m_position.x = Clamp(m_position.x, 0.0, (double)Scene::Width());
+    m_position.x = Clamp(m_position.x, (double)Map::tileSize, (double)(Scene::Width() - Map::tileSize));
     m_position.y = Clamp(m_position.y, 0.0, (double)Scene::Height());
 }
 

@@ -16,8 +16,9 @@ void Main()
 
     
 
-    // Load map texture
-    Texture mapTexture(U"map.png");
+    // Load textures and sprites
+    //Texture mapTexture(U"map.png");
+    TextureAsset::Register(U"MapTexture", U"Assets/MapTexture.png");
     TextureAsset::Register(U"EnemySprite", U"Assets/EnemySprite.png");
     TextureAsset::Register(U"PlayerSprite", U"Assets/PlayerSprite.png");
 
@@ -98,8 +99,7 @@ void Main()
 
         
         // Draw the map
-        
-        map.Draw(mapTexture);
+        map.Draw();
         playerController.Draw(deltaTime);
         shop.DrawShop();
 
@@ -110,5 +110,7 @@ void Main()
         {
             enemy.Draw();
         }
+
+        
     }
 }

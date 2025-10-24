@@ -11,6 +11,14 @@ public:
         trap,
     };
 
+    enum SpriteIndex {
+        bg1 = 0,
+        bg2 = 1,
+        wall1 = 2,
+        wall2 = 3,
+        trapActive = 4,
+    };
+
     // trap struct
     struct Trap {
         int type = 0;
@@ -32,6 +40,11 @@ public:
               collider(pos.x, pos.y, tileSize), explosionCol(pos.x - explosionOffset, pos.y - explosionOffset, explosionSize){}
     };
 
+    static constexpr int tileSize = 32; // 16?
+    static constexpr int layerWidth = 16;
+    static constexpr int layerHeight = 16;
+    static constexpr int layerCount = 8;
+    
     int currentLayer = 0;
     bool layerSwitched = false; // to add delay between layers
 
@@ -41,7 +54,7 @@ public:
     // map general
     void UpdateMap(double deltaTime, PlayerController& player, Array<Enemy>* enemies);
     void UpdateBackground(double deltaTime);
-	void Draw(Texture& mapTex);
+	void Draw();
     void EndLayer();
     void StartNextLayer();
 
@@ -50,17 +63,14 @@ public:
     void CreateTraps();
     void ClearTraps(); // clear all traps
     void UpdateTraps(double deltaTime, PlayerController& player, Array<Enemy>* enemies); // update traps
-    void DrawTraps(Texture& trapTex); // draw traps
+    void DrawTraps(); // draw traps
     void DestroyTrap(Trap& trap); // destroy a trap
 
     // enemy management
     //void CreateEnemies();
 
 private:
-    static constexpr int tileSize = 32; // 16?
-    static constexpr int layerWidth = 16;
-    static constexpr int layerHeight = 16;
-    static constexpr int layerCount = 8;
+    Texture mapTexture;
 
     Array<float> bgTileYPos; // y positions of background tiles in texture
     float bgScrollSpeed = 60.0f; // background scroll speed
