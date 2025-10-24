@@ -5,7 +5,7 @@
 Enemy::Enemy(int8_t t, int8_t speedType, PlayerController* p)
 {
     // textureAsset constant
-    enemyTexture = TextureAsset(U"EnemyTexture");
+    enemyTexture = TextureAsset(U"EnemySprite");
     enemyPos = RandomVec2({ 20, Scene::Width() - 20 }, Scene::Height() + 20);
     enemyType = t;
     enemySpeed = speedType * 10;

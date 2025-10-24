@@ -6,13 +6,20 @@
 
 void Main()
 {
+
     // Create a window
+    Window::SetTitle(U"罪の果て");
     Window::Resize(512, 480);
+
+    const PixelShader paletteSwap = HLSL{ U"Assets/shaders/colorSwap.hlsl", U"PS_PaletteSwap" };
     const ScopedRenderStates2D sampler{ SamplerState::ClampNearest };
+
+    
 
     // Load map texture
     Texture mapTexture(U"map.png");
-    TextureAsset::Register(U"EnemyTexture", U"Assets/EnemySprite.png");
+    TextureAsset::Register(U"EnemySprite", U"Assets/EnemySprite.png");
+    TextureAsset::Register(U"PlayerSprite", U"Assets/PlayerSprite.png");
 
     Array<Enemy> enemies;
     constexpr double InitialEnemySpawnInterval = 2.0;
@@ -89,12 +96,16 @@ void Main()
                 ++enemy;
         }
 
+        
         // Draw the map
+        
         map.Draw(mapTexture);
         playerController.Draw(deltaTime);
         shop.DrawShop();
 
         // Draw the enemies
+
+        const ScopedCustomShader2D shader{ paletteSwap }; // enemy shader palette
         for (auto &enemy : enemies)
         {
             enemy.Draw();

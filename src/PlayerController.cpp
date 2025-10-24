@@ -117,7 +117,7 @@ PlayerController::PlayerController(Vec2 firstPosition)
 {
     m_firstPosition = firstPosition;
     m_position = m_firstPosition;
-    m_sprite = Texture{ U"😇"_emoji };
+    m_sprite = TextureAsset{ U"PlayerSprite" };
     m_collider = Circle{ m_position, 16.0 };
 }
 
