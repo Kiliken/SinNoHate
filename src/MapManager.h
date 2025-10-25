@@ -40,6 +40,8 @@ public:
               collider(pos.x, pos.y, tileSize), explosionCol(pos.x - explosionOffset, pos.y - explosionOffset, explosionSize){}
     };
 
+    static constexpr int screenW = 512;
+    static constexpr int screenH = 480;
     static constexpr int tileSize = 32; // 16?
     static constexpr int layerWidth = 16;
     static constexpr int layerHeight = 16;
@@ -78,7 +80,7 @@ private:
     float bgReverseScrollSpeed = -120.0f; // reverse scroll speed
     double scrollOffset = 0.0; // current scroll offset
 
-    static constexpr float layerTime = 30.0f; // time per layer in seconds (excluding final layer)
+    static constexpr float layerTime = 10.0f; // time per layer in seconds (excluding final layer)
     float layerTimer = 0.0f;
 
     Array<Grid<int32>> map; // map with layers
