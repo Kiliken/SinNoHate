@@ -3,6 +3,8 @@
 #include "Player/PlayerController.h"
 #include "Shop.h"
 #include "Enemy.h"
+#include "Title.h"
+
 
 struct PaletteSettings
 {
@@ -38,9 +40,16 @@ void Main()
     Map map;                                             // Create map instance
     Shop shop;                                           // Create shop instance
     PlayerController playerController({256.0f, 240.0f}); // Create player controller instance
+    Title title;
 
     while (System::Update())
     {
+        if (!title.gameStarted) 
+        {
+            title.update();
+            title.draw();
+            continue;
+        }
         const double deltaTime = Scene::DeltaTime();
         enemyAccumulatedTime += deltaTime;
 

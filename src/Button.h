@@ -19,6 +19,8 @@ class Button
 	void draw();
 
 	bool clicked();
+
+	bool hovered();
 	
 	private:
 

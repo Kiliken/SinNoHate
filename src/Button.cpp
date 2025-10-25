@@ -29,3 +29,7 @@ void Button::draw() {
 bool Button::clicked() {
 	return rect.leftClicked();
 }
+
+bool Button::hovered() {
+	return hover;
+}
