@@ -2,31 +2,17 @@
 
 
 
-Enemy::Enemy(int8_t t, int8_t speedType, PlayerController* p)
+Enemy::Enemy(int8_t t, PlayerController* p)
 {
     // textureAsset constant
     enemyTexture = TextureAsset(U"EnemySprite");
     enemyPos = RandomVec2({ 20, Scene::Width() - 20 }, Scene::Height() + 20);
     enemyType = t;
-    enemySpeed = speedType * 10;
+    enemySpeed = t * 10;
     player = p;
     playerCollider = p->Collider();
 
     enemyCollider.setR(20.0);
-
-    switch (enemyType)
-    {
-    case 1:
-        enemyColor = ColorF(1, 0.7, 0.7);
-        break;
-
-    case 2:
-        enemyColor = ColorF(0.7, 1, 0.7);
-        break;
-    case 3:
-        enemyColor = ColorF(0.7, 0.7, 1);
-        break;
-    }
 }
 
 Enemy::~Enemy()
@@ -37,7 +23,9 @@ Enemy::~Enemy()
 bool Enemy::Update()
 {
     const double deltaTime = Scene::DeltaTime();
+    const double time = Scene::Time();
     enemyPos.y -= (deltaTime * EnemySpeed);
+    enemyPos.x += Math::Sin(time)/2;
     enemyCollider.center = enemyPos;
 
     if (damageCooldown > 0){
@@ -69,6 +57,7 @@ void Enemy::Draw()
 
 Circle Enemy::GetCollider() { return enemyCollider; }
 
+int8_t Enemy::GetEnemyType() { return enemyType; }
 
 
 

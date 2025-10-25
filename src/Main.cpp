@@ -19,8 +19,12 @@ void Main()
     const PixelShader paletteSwap = HLSL{ U"Assets/shaders/colorSwap.hlsl", U"PS_PaletteSwap" };
     const ScopedRenderStates2D sampler{ SamplerState::ClampNearest };
 
-    ConstantBuffer<PaletteSettings> enemyPalette;
-    enemyPalette->currentPalette = static_cast<unsigned int>(0);
+    ConstantBuffer<PaletteSettings> enemyPalette[7];
+
+    for (int i=0;i<7;i++){
+        enemyPalette[i]->currentPalette = static_cast<unsigned int>(i);
+    }
+    
 
     const Texture enemyPaletteTexture(U"Assets/PaletteTest.png");
 
@@ -49,7 +53,7 @@ void Main()
             enemyAccumulatedTime -= enemySpawnTime;
             enemySpawnTime = Max(enemySpawnTime * 0.95, 0.3);
             // enemies << GenerateEnemy();
-            enemies << Enemy(RandomUint8() % 4, RandomUint8() % 4, &playerController);
+            enemies << Enemy(RandomUint8() % 7, &playerController);
         }
 
         // debug
@@ -60,10 +64,6 @@ void Main()
             shop.ShowShop();
             
         }
-        if (KeyQ.down())
-        {
-            enemyPalette->currentPalette++;
-        }
 
         // handle layer switching and shop
         if (map.layerSwitched)
@@ -73,12 +73,17 @@ void Main()
                 shop.ShowShop();
 
             shop.UpdateShop(playerController);
+            enemies.clear();
 
             if (shop.itemBought)
             {
                 map.StartNextLayer();
                 shop.ResetShop();
+
+                enemySpawnTime = 2.0; //change the enemey spawn count based on the level
             }
+
+            
         }
 
         map.UpdateMap(deltaTime, playerController, &enemies);
@@ -118,12 +123,12 @@ void Main()
 
         // Draw the enemies
         Graphics2D::SetPSTexture(1, enemyPaletteTexture);
-        Graphics2D::SetPSConstantBuffer(1, enemyPalette);
-        
         const ScopedCustomShader2D shader{ paletteSwap }; // enemy shader palette
+        
         for (auto &enemy : enemies)
         {
+            Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
             enemy.Draw();
-        }
+        } 
     }
 }

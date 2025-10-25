@@ -4,7 +4,7 @@
 
 class Enemy {
 public:
-    Enemy(int8_t t, int8_t speedType, PlayerController* p);
+    Enemy(int8_t t, PlayerController* p);
     ~Enemy();
 
 private:
@@ -20,13 +20,11 @@ private:
     PlayerController* player;
     Circle* playerCollider;
 
-    ColorF enemyColor; //just for debug, gonna use shader palette after 
-
-
-
 public:
 
     bool Update();
     void Draw();
     Circle GetCollider();
+
+    int8_t GetEnemyType();
 };
