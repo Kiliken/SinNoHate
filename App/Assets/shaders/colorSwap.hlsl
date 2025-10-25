@@ -2,20 +2,12 @@
 //	Textures
 //
 Texture2D g_texture0 : register(t0);
+Texture2D g_texture1 : register(t1);
 SamplerState g_sampler0 : register(s0);
+SamplerState g_sampler1 : register(s1);
 
 namespace s3d
 {
-	//
-	//	VS Input
-	//
-	struct VSInput
-	{
-		float2 position : POSITION;
-		float2 uv : TEXCOORD0;
-		float4 color : COLOR0;
-	};
-
 	//
 	//	VS Output / PS Input
 	//
@@ -25,23 +17,6 @@ namespace s3d
 		float4 color : COLOR0;
 		float2 uv : TEXCOORD0;
 	};
-
-	//
-	//	Siv3D Functions
-	//
-	float4 Transform2D(float2 pos, float2x4 t)
-	{
-		return float4((t._13_14 + (pos.x * t._11_12) + (pos.y * t._21_22)), t._23_24);
-	}
-}
-
-//
-//	Constant Buffer
-//
-cbuffer VSConstants2D : register(b0)
-{
-	row_major float2x4 g_transform;
-	float4 g_colorMul;
 }
 
 cbuffer PSConstants2D : register(b0)
@@ -53,27 +28,51 @@ cbuffer PSConstants2D : register(b0)
 	float4 g_internal;
 }
 
+cbuffer PaletteSettings : register(b1)
+{
+	uint currentPalette;
+}
+
 //
 //	Functions
 //
-s3d::PSInput VS(s3d::VSInput input)
-{
-	s3d::PSInput result;
-	result.position = s3d::Transform2D(input.position, g_transform);
-	result.color = input.color * g_colorMul;
-	result.uv = input.uv;
-	return result;
-}
 
-float4 PS(s3d::PSInput input) : SV_TARGET
+
+float absf(float x)
 {
-	return (input.color + g_colorAdd);
+    return (x < 0.0f) ? -x : x;
 }
 
 float4 PS_PaletteSwap(s3d::PSInput input) : SV_TARGET
 {
-	const float4 texColor = g_texture0.Sample(g_sampler0, input.uv);
+    float4 texColor = g_texture0.Sample(g_sampler0, input.uv);
 
-	return ((texColor * input.color) + g_colorAdd);
+    uint paletteWidth, paletteHeight;
+    g_texture1.GetDimensions(paletteWidth, paletteHeight);
+
+    float stepX = 1.0f / paletteWidth;
+    float stepY = 1.0f / paletteHeight;
+	//uint i = 3;
+    for (uint i = 0; i < paletteWidth; i++)
+    {
+        float2 sourceUV = float2((i + 0.5f) * stepX, 0.5f * stepY);
+        float4 sourceColor = g_texture1.Sample(g_sampler1, sourceUV);
+
+        float3 diff = texColor.rgb - sourceColor.rgb;
+		
+        if (absf(diff.r) < 0.01f && absf(diff.g) < 0.01f && absf(diff.b) < 0.01f && texColor.a > 0.01f)
+        {
+            float2 targetUV = float2((i + 0.5f) * stepX, (currentPalette + 0.5f) * stepY);
+            float4 targetColor = g_texture1.Sample(g_sampler1, targetUV);
+            //return (targetColor * input.color) + g_colorAdd;
+			//return float4(1, 0, 1, 1);
+			texColor = targetColor;
+        }
+    }
+
+    // No match found — return fallback color or original
+    return (texColor * input.color) + g_colorAdd;
+	//return float4(1, 1, 0, 1);
 }
+
 
