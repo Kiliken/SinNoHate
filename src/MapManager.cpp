@@ -172,7 +172,7 @@ void Map::UpdateTraps(double deltaTime, PlayerController& player, Array<Enemy>* 
             for (auto enemy = enemies->begin(); enemy != enemies->end();){
                 if(enemy->GetCollider().intersects(trap.explosionCol)){
                     enemy = enemies->erase(enemy);
-                    Print << U"Enemy BOOM!";
+                    Console << U"Enemy BOOM!";
                     continue;
                 }
 

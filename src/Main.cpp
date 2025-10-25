@@ -4,6 +4,11 @@
 #include "Shop.h"
 #include "Enemy.h"
 
+struct PaletteSettings
+{
+    unsigned int currentPalette;
+};
+
 void Main()
 {
 
@@ -14,7 +19,10 @@ void Main()
     const PixelShader paletteSwap = HLSL{ U"Assets/shaders/colorSwap.hlsl", U"PS_PaletteSwap" };
     const ScopedRenderStates2D sampler{ SamplerState::ClampNearest };
 
-    
+    ConstantBuffer<PaletteSettings> enemyPalette;
+    enemyPalette->currentPalette = static_cast<unsigned int>(0);
+
+    const Texture enemyPaletteTexture(U"Assets/PaletteTest.png");
 
     // Load textures and sprites
     //Texture mapTexture(U"map.png");
@@ -50,6 +58,11 @@ void Main()
             // map.GoToNextLayer();
             shop.ResetShop();
             shop.ShowShop();
+            
+        }
+        if (KeyQ.down())
+        {
+            enemyPalette->currentPalette++;
         }
 
         // handle layer switching and shop
@@ -104,13 +117,13 @@ void Main()
         shop.DrawShop();
 
         // Draw the enemies
-
+        Graphics2D::SetPSTexture(1, enemyPaletteTexture);
+        Graphics2D::SetPSConstantBuffer(1, enemyPalette);
+        
         const ScopedCustomShader2D shader{ paletteSwap }; // enemy shader palette
         for (auto &enemy : enemies)
         {
             enemy.Draw();
         }
-
-        
     }
 }

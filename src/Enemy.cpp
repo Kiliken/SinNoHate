@@ -61,7 +61,7 @@ void Enemy::Draw()
 {
     const uint64 t = Time::GetMillisec();
 	const int32 x = (t / 120 % 5);
-    enemyTexture((32 * x),0,32,32).resized(64).drawAt(enemyPos, enemyColor); // add color
+    enemyTexture((32 * x),0,32,32).resized(64).drawAt(enemyPos); // add color
 
     //enemyCollider.draw();
 

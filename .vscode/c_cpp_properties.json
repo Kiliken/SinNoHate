@@ -3,8 +3,8 @@
     {
       "name": "Win64-MSVC",
       "includePath": [
-        "${workspaceFolder}/OpenSiv3D_SDK_*/include",
-        "${workspaceFolder}/OpenSiv3D_SDK_*/include/ThirdParty",
+        "${workspaceFolder}/OpenSiv3D_SDK_0.6.16/include",
+        "${workspaceFolder}/OpenSiv3D_SDK_0.6.16/include/ThirdParty",
         "${workspaceFolder}/src",
         "${workspaceFolder}"
       ],
