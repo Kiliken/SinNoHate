@@ -11,18 +11,20 @@ bool BulletBase::IsActive()
     return m_isActive;
 }
 
-BulletBase::BulletBase(Vec2 firstPosition, Vec2 firstDirection)
+BulletBase::BulletBase(Vec2 firstPosition, Vec2 firstDirection, int radius)
 {
     m_isActive = true;
     m_position = firstPosition;
+    m_sprite = Circle{ m_position, radius };
     m_moveDirection = firstDirection;
     m_color = Palette::Red;
 }
 
-void BulletBase::Init(Vec2 firstPosition, Vec2 firstDirection)
+void BulletBase::Init(Vec2 firstPosition, Vec2 firstDirection, int radius)
 {
     m_isActive = true;
     m_position = firstPosition;
+    m_sprite = Circle{ m_position, radius };
     m_moveDirection = firstDirection;
 }
 
