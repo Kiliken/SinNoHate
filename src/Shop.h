@@ -9,8 +9,6 @@ public:
     {
         heart,
         bullet,
-        atkDmg,
-        atkSpd,
         moveSpd
     };
 
@@ -35,6 +33,6 @@ public:
 
 
 private:
-    const Array<String> itemNames = { U"Heart", U"Bullet", U"Attack Damage", U"Attack Speed", U"Movement Speed" };  // placeholder names
+    const Array<String> itemNames = { U"Heart", U"Bullet", U"Movement Speed" };  // placeholder names
     Array<Item> itemsInShop;   // 3 items
 };

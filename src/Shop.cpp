@@ -8,18 +8,9 @@ Shop::Shop() {
 
 void Shop::AddItems() {
     // get array of all possible items
-    Array<ItemType> possibleItems;
-    for (int i = 0; i < itemNames.size(); ++i) {
-        possibleItems.push_back(static_cast<ItemType>(i));
-    }
+    Array<ItemType> possibleItems = { heart, bullet, moveSpd };
 
-    // Shuffle the possible items
-    possibleItems.shuffle();
-
-    // Clear current items in shop
-    itemsInShop.clear();
-
-    // Add first 3 items from shuffled list
+    // Add 3 items from list
     for (int i = 0; i < 3; ++i) {
         Item newItem;
         newItem.type = possibleItems[i];
@@ -42,14 +33,6 @@ void Shop::BuyItem(ItemType item, PlayerController& player) {
         // Implement bullet upgrade
         Console << U"Bought Bullet Upgrade!";
         break;
-    case atkDmg:
-        // Implement attack damage upgrade
-        Console << U"Bought Attack Damage Upgrade!";
-        break;
-    case atkSpd:
-        // Implement attack speed upgrade
-        Console << U"Bought Attack Speed Upgrade!";
-        break;
     case moveSpd:
         // Implement movement speed upgrade
         Console << U"Bought Movement Speed Upgrade!";
@@ -70,7 +53,7 @@ void Shop::ShowShop() {
 void Shop::ResetShop() {
     shopActive = false;
     itemBought = false;
-    AddItems();
+    //AddItems();
 }
 
 
