@@ -176,9 +176,13 @@ void PlayerController::UpGrade_ExpansionBullet(int expansValue)
     m_bulletRadius += expansValue;
 }
 
-void PlayerController::UpGrade_IncreaseMoveSpeed(double addValue)
+void PlayerController::UpGrade_DecreaseAttackSpan(double subtractValue)
 {
-    m_moveForce += addValue;
+    if (subtractValue > m_shotCoolTime){
+        Print << U"Attack Span：Exceeds the current value";
+        return;
+    }
+    m_shotCoolTime -= subtractValue;
 }
 
 void PlayerController::UpdateLife(int addValue)

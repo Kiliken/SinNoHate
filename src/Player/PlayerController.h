@@ -5,11 +5,11 @@
 
 class PlayerController{
     private:
+        const double m_moveForce = 300.0;		// 移動速度1秒あたり
         const double m_jumpForce = 300.0;		// ジャンプ初速度
         const double m_gravity = -0.98;
         const double m_gravityScale = 500.0;
         const double m_shootPosDistance = 50.0;
-        double m_shotCoolTime = 0.5;			// ショットのクールダウン時間：秒
         Vec2 m_velocity{ 0, 0 };				// 現在の移動速度
         Vec2 m_position{ 0, 0 };				// 現在の座標
         Texture m_crossHair;
@@ -20,10 +20,10 @@ class PlayerController{
         Texture m_sprite;				// プレイヤーの見た目のテクスチャ
         Circle m_collider;
         Vec2 m_firstPosition;			// 初期位置
-        double m_moveForce = 300.0;		// 移動速度1秒あたり
         int m_maxLife = 3;				// 最大ライフ
         int m_life = m_maxLife;					// 現在のライフ
         int m_bulletRadius = 10;        // 弾の大きさ
+        double m_shotCoolTime = 0.5;			// ショットのクールダウン時間：秒
         double m_shotCoolDown = m_shotCoolTime;				// ショットのクールタイム
         bool m_inFinalLayer = false;
         bool m_shotable = true;
@@ -85,8 +85,8 @@ class PlayerController{
         void UpGrade_ExpansionBullet(int expansValue);
 
         /// @brief 移動速度を上げる
-        /// @param addValue 加算値
-        void UpGrade_IncreaseMoveSpeed(double addValue);
+        /// @param subtractValue 加算値
+        void UpGrade_DecreaseAttackSpan(double subtractValue);
 
         /// @brief 現在のライフを取得
         int Life() const { return m_life; }
