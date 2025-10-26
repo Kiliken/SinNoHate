@@ -60,8 +60,9 @@ void Main()
         if (KeyE.down())
         {
             // map.GoToNextLayer();
-            shop.ResetShop();
-            shop.ShowShop();
+            // shop.ResetShop();
+            // shop.ShowShop();
+            map.reverseScroll = !map.reverseScroll;
             
         }
 

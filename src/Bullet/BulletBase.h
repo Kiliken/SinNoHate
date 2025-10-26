@@ -5,7 +5,7 @@
 class BulletBase{
     protected:
         const double m_moveSpeed = 500.0;	// 移動速度
-        Circle m_sprite{ 0, 0, 10 };		// テクスチャ
+        Circle m_sprite;		// テクスチャ
         Vec2 m_velocity{ 0, 0 };
 
         Color m_color;
@@ -19,9 +19,9 @@ class BulletBase{
     public:
         bool IsActive();
 
-        BulletBase(Vec2 firstPosition, Vec2 firstDirection);
+        BulletBase(Vec2 firstPosition, Vec2 firstDirection, int radius);
 
-        void Init(Vec2 firstPosition, Vec2 firstDirection);
+        void Init(Vec2 firstPosition, Vec2 firstDirection, int radius);
 
         void Update(double deltaTime);
 

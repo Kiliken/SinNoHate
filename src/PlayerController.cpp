@@ -1,11 +1,29 @@
 #include "Player/PlayerController.h"
 #include "MapManager.h"
 
+PlayerController::PlayerController(Vec2 firstPosition)
+{
+    m_firstPosition = firstPosition;
+    m_position = m_firstPosition;
+    m_sprite = TextureAsset{ U"PlayerSprite" };
+    m_crossHair = Texture{ U"Assets/crossHair.png" };
+    m_collider = Circle{ m_position, 16.0 };
+}
+
+PlayerController::~PlayerController() noexcept
+{
+    // 生成したすべての球を破棄する
+    for (auto& bullet : m_bullets){
+        delete bullet;
+    }
+}
+
 void PlayerController::Aiming()
 {
     Vec2 cursorPos = Cursor::PosF();
     m_aimDirection = (cursorPos - m_position).normalized();
-    m_shootPos.setPos(m_position + (m_aimDirection * m_shootPosDistance));
+    m_aimAngle = Math::Atan2(m_aimDirection.x * -1, m_aimDirection.y);
+    m_shotPos = m_position + (m_aimDirection * m_shootPosDistance);
 }
 
 void PlayerController::UpdateBullets(double deltaTime)
@@ -42,24 +60,46 @@ void PlayerController::UpdateVelocity(Vec2 velocity)
     else if (!KeyD.pressed() && !KeyA.pressed()){
         m_velocity.x = 0 * m_moveForce;
     }
+    // 右
     else if (KeyD.pressed()){
         m_velocity.x = 1 * m_moveForce;
     }
+    // 左
     else if (KeyA.pressed()){
         m_velocity.x = -1 * m_moveForce;
     }
 
     // 上下移動速度も更新
-    if (m_moveableVertical){
+    // 最終レイヤー以外なら上速度が1/2, 下速度が2倍
+    if (!m_inFinalLayer){
         if (KeyW.pressed() && KeyS.pressed()){
             m_velocity.y = 0 * m_moveForce;
         }
         else if (!KeyW.pressed() && !KeyS.pressed()){
             m_velocity.y = 0 * m_moveForce;
         }
+        // 上
+        else if (KeyW.pressed()){
+            m_velocity.y = 1 * m_moveForce / 2;
+        }
+        // 下
+        else if (KeyS.pressed()){
+            m_velocity.y = -1 * m_moveForce * 1.3;
+        }
+    }
+    // 最終レイヤーなら上下移動の速度が一緒
+    else{
+        if (KeyW.pressed() && KeyS.pressed()){
+            m_velocity.y = 0 * m_moveForce;
+        }
+        else if (!KeyW.pressed() && !KeyS.pressed()){
+            m_velocity.y = 0 * m_moveForce;
+        }
+        // 上
         else if (KeyW.pressed()){
             m_velocity.y = 1 * m_moveForce;
         }
+        // 下
         else if (KeyS.pressed()){
             m_velocity.y = -1 * m_moveForce;
         }
@@ -84,19 +124,19 @@ void PlayerController::Jump()
 void PlayerController::Shot()
 {
     if (!m_shotable) return;
-    if (MouseL.down()){
+    if (MouseL.down() || KeySpace.down()){
         // すでに発射済みで非アクティブ化している球がある場合それを再利用
         if (!m_bullets.isEmpty()){
             for (auto& bullet : m_bullets){
                 if (!bullet->IsActive()){
-                    bullet->Init(m_shootPos.center, m_aimDirection);
+                    bullet->Init(m_shotPos, m_aimDirection, m_bulletRadius);
                     m_shotable = false;
                     return;
                 }
             }
         }
         // ない場合、新たに生成
-        BulletBase* bullet = new BulletBase{ m_shootPos.center, m_aimDirection };
+        BulletBase* bullet = new BulletBase{ m_shotPos, m_aimDirection, m_bulletRadius };
         m_shotable = false;
         m_bullets << bullet;
     }
@@ -114,22 +154,6 @@ void PlayerController::UpdateVelocityYByGravity(double deltaTime)
     m_velocity.y += m_gravity * m_gravityScale * deltaTime;
 }
 
-PlayerController::PlayerController(Vec2 firstPosition)
-{
-    m_firstPosition = firstPosition;
-    m_position = m_firstPosition;
-    m_sprite = TextureAsset{ U"PlayerSprite" };
-    m_collider = Circle{ m_position, 16.0 };
-}
-
-PlayerController::~PlayerController() noexcept
-{
-    // 生成したすべての球を破棄する
-    for (auto& bullet : m_bullets){
-        delete bullet;
-    }
-}
-
 void PlayerController::OnDamage()
 {
     UpdateLife(-1);
@@ -141,10 +165,24 @@ void PlayerController::HealLife()
     UpdateLife(1);
 }
 
-void PlayerController::IncreaseMaxLife(int addValue)
+void PlayerController::UpGrade_IncreaseMaxLife(int addValue)
 {
     m_maxLife += addValue;
     m_life += addValue;
+}
+
+void PlayerController::UpGrade_ExpansionBullet(int expansValue)
+{
+    m_bulletRadius += expansValue;
+}
+
+void PlayerController::UpGrade_DecreaseAttackSpan(double subtractValue)
+{
+    if (subtractValue > m_shotCoolTime){
+        Print << U"Attack Span：Exceeds the current value";
+        return;
+    }
+    m_shotCoolTime -= subtractValue;
 }
 
 void PlayerController::UpdateLife(int addValue)
@@ -166,20 +204,19 @@ void PlayerController::Update(double deltaTime)
 
 void PlayerController::Draw(double deltaTime)
 {
-    m_collider.draw(Palette::Red);
+    // m_collider.drawFrame(1.0, Palette::Red);
     m_sprite.drawAt( m_position );
-    m_shootPos.draw(Palette::Aqua);
+    m_crossHair.rotated(m_aimAngle).drawAt(m_shotPos);
 
     for (auto& bullet : m_bullets){
         bullet->Draw();
     }
 }
 
-void PlayerController::OnLastLayer()
+void PlayerController::OnFinalLayer()
 {
-    m_moveableVertical = true;
+    m_inFinalLayer = true;
 }
-
 Circle *PlayerController::Collider()
 {
     return &m_collider;

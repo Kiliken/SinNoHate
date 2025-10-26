@@ -1,5 +1,6 @@
 #include "Shop.h"
 
+
 Shop::Shop() {
     // Constructor implementation (if needed)
     AddItems();
@@ -8,23 +9,14 @@ Shop::Shop() {
 
 void Shop::AddItems() {
     // get array of all possible items
-    Array<ItemType> possibleItems;
-    for (int i = 0; i < itemNames.size(); ++i) {
-        possibleItems.push_back(static_cast<ItemType>(i));
-    }
+    Array<ItemType> possibleItems = { heart, bullet, atkSpd };
 
-    // Shuffle the possible items
-    possibleItems.shuffle();
-
-    // Clear current items in shop
-    itemsInShop.clear();
-
-    // Add first 3 items from shuffled list
+    // Add 3 items from list
     for (int i = 0; i < 3; ++i) {
         Item newItem;
         newItem.type = possibleItems[i];
         newItem.name = itemNames[possibleItems[i]];
-        newItem.rect = Rect(100 + i * 150, 200, 100, 100); // debug rect positions
+        newItem.rect = Rect(startX + i * (itemW + spacing), y, itemW, itemH); // debug rect positions
         itemsInShop.push_back(newItem);
         Console << U"Added item to shop: " << newItem.name;
     }
@@ -35,24 +27,18 @@ void Shop::AddItems() {
 void Shop::BuyItem(ItemType item, PlayerController& player) {
     switch (item) {
     case heart:
-        player.IncreaseMaxLife(1);
+        player.UpGrade_IncreaseMaxLife(lifeIncrease);
         Console << U"Bought Heart! Max HP: " << player.MaxLife();
         break;
     case bullet:
         // Implement bullet upgrade
+        player.UpGrade_ExpansionBullet(bulletExpansion);
         Console << U"Bought Bullet Upgrade!";
-        break;
-    case atkDmg:
-        // Implement attack damage upgrade
-        Console << U"Bought Attack Damage Upgrade!";
         break;
     case atkSpd:
         // Implement attack speed upgrade
+        player.UpGrade_DecreaseAttackSpan(attackSpeedDecrease);
         Console << U"Bought Attack Speed Upgrade!";
-        break;
-    case moveSpd:
-        // Implement movement speed upgrade
-        Console << U"Bought Movement Speed Upgrade!";
         break;
     default:
         Console << U"Unknown item!";
@@ -70,7 +56,7 @@ void Shop::ShowShop() {
 void Shop::ResetShop() {
     shopActive = false;
     itemBought = false;
-    AddItems();
+    //AddItems();
 }
 
 
@@ -94,11 +80,14 @@ void Shop::DrawShop() {
     if (!shopActive) return;
 
     // Draw shop background DEBUG
-    Rect(50, 150, 500, 300).draw(ColorF(0.0, 0.0, 0.0, 0.7));
+    Rect(bgPos.x, bgPos.y, bgSize.x, bgSize.y).draw(ColorF(0.0, 0.0, 0.0, 0.7));
+
+    font(U"Select Upgrade").drawAt(24, center - Vec2(0, 90), Palette::White);
 
     // Draw items DEBUG
     for (const auto& item : itemsInShop) {
-        item.rect.drawFrame(2, 0, itemBought ? ColorF(0.5, 0.5, 0.5) : ColorF(1.0, 1.0, 1.0));
-        FontAsset(U"Default")(item.name).drawAt(item.rect.center(), itemBought ? ColorF(0.5, 0.5, 0.5) : ColorF(1.0, 1.0, 1.0));
+        const ColorF col = itemBought ? ColorF(0.5, 0.5, 0.5) : ColorF(1.0, 1.0, 1.0);
+        item.rect.drawFrame(2, 0, col);
+        font(item.name).drawAt(12, item.rect.center() + Vec2(0, 70), col);
     }
 }

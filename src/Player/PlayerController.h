@@ -10,19 +10,22 @@ class PlayerController{
         const double m_gravity = -0.98;
         const double m_gravityScale = 500.0;
         const double m_shootPosDistance = 50.0;
-        double m_shotCoolTime = 0.5;			// ショットのクールダウン時間：秒
-        Circle m_shootPos{ 0, 0, 10 };
         Vec2 m_velocity{ 0, 0 };				// 現在の移動速度
         Vec2 m_position{ 0, 0 };				// 現在の座標
+        Texture m_crossHair;
+        Vec2 m_shotPos{ 0, 0 };
         Vec2 m_aimDirection{ 0, 0 };
+        double m_aimAngle = 0;
 
         Texture m_sprite;				// プレイヤーの見た目のテクスチャ
         Circle m_collider;
         Vec2 m_firstPosition;			// 初期位置
         int m_maxLife = 3;				// 最大ライフ
         int m_life = m_maxLife;					// 現在のライフ
+        int m_bulletRadius = 10;        // 弾の大きさ
+        double m_shotCoolTime = 0.5;			// ショットのクールダウン時間：秒
         double m_shotCoolDown = m_shotCoolTime;				// ショットのクールタイム
-        bool m_moveableVertical = false;
+        bool m_inFinalLayer = false;
         bool m_shotable = true;
         Array<BulletBase*> m_bullets;
 
@@ -74,7 +77,16 @@ class PlayerController{
         void HealLife();
 
         /// @brief 最大ライフを増加させる
-        void IncreaseMaxLife(int addValue);
+        /// @param addValue 加算値
+        void UpGrade_IncreaseMaxLife(int addValue);
+
+        /// @brief 弾のサイズを大きくする
+        /// @param expansValue 加算値
+        void UpGrade_ExpansionBullet(int expansValue);
+
+        /// @brief 移動速度を上げる
+        /// @param subtractValue 加算値
+        void UpGrade_DecreaseAttackSpan(double subtractValue);
 
         /// @brief 現在のライフを取得
         int Life() const { return m_life; }
@@ -90,7 +102,7 @@ class PlayerController{
         /// @param deltaTime 微小時間
         void Draw(double deltaTime);
 
-        void OnLastLayer();
+        void OnFinalLayer();
 
         /// @brief 当たり判定を取得
         Circle* Collider();

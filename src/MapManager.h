@@ -40,6 +40,8 @@ public:
               collider(pos.x, pos.y, tileSize), explosionCol(pos.x - explosionOffset, pos.y - explosionOffset, explosionSize){}
     };
 
+    static constexpr int screenW = 512;
+    static constexpr int screenH = 480;
     static constexpr int tileSize = 32; // 16?
     static constexpr int layerWidth = 16;
     static constexpr int layerHeight = 16;
@@ -47,6 +49,7 @@ public:
     
     int currentLayer = 0;
     bool layerSwitched = false; // to add delay between layers
+    bool reverseScroll = false;
 
 
     Map();
@@ -74,15 +77,17 @@ private:
 
     Array<float> bgTileYPos; // y positions of background tiles in texture
     float bgScrollSpeed = 60.0f; // background scroll speed
+    float bgReverseScrollSpeed = -120.0f; // reverse scroll speed
+    double scrollOffset = 0.0; // current scroll offset
 
-    static constexpr float layerTime = 30.0f; // time per layer in seconds (excluding final layer)
+    static constexpr float layerTime = 10.0f; // time per layer in seconds (excluding final layer)
     float layerTimer = 0.0f;
 
     Array<Grid<int32>> map; // map with layers
 
     // trap parameters
     Array<int> trapSpawnMaxCounts = { 3, 3, 4, 6, 6, 8, 10, 14 }; // per layer
-    Array<int> trapDamageValues = { 1, 1, 1, 2, 2, 2, 3, 3 }; // per layer
+    Array<int> trapDamageValues = { 1, 1, 1, 1, 1, 1, 1, 1 }; // per layer
     float trapSpawnTimer = 0.0f;
     float trapSpawnInterval = 2.0f; // seconds
     bool spawningTraps = true;

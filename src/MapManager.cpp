@@ -62,15 +62,16 @@ void Map::UpdateMap(double deltaTime, PlayerController& player, Array<Enemy>* en
 
 void Map::UpdateBackground(double deltaTime)
 {
-    // Simple scrolling background logic
-    for (auto& yPos : bgTileYPos)
-    {
-        yPos -= bgScrollSpeed * deltaTime; // scroll speed
-        if (yPos < -tileSize)
-        {
-            yPos += layerHeight * tileSize;
-        }
-    }
+    double speed = reverseScroll ? bgReverseScrollSpeed : bgScrollSpeed;
+    scrollOffset += speed * deltaTime;
+
+    // wrap within the height of one full tile cycle
+    double totalHeight = layerHeight * tileSize;
+
+    // Proper modulo wrap (keeps value within [0, totalHeight))
+    scrollOffset = Math::Fmod(scrollOffset, totalHeight);
+    if (scrollOffset < 0)
+        scrollOffset += totalHeight;
 }
 
 
@@ -247,22 +248,27 @@ void Map::DrawTraps() {
 }
 
 
-// draw the map on the screen
 void Map::Draw() {
     for (int y = 0; y < layerHeight; y++) {
         for (int x = 0; x < layerWidth; x++) {
             const int32 tile = map[currentLayer][y][x];
             int sprite = GetSprite(tile);
-            Vec2 pos(x * tileSize, Math::Round(bgTileYPos[y]));
-            // y will be current layer later
-            if(x == layerWidth - 1)
-               mapTexture(sprite * tileSize, 0, tileSize, tileSize).mirrored().draw(pos);
+
+            // apply scroll offset when drawing
+            double drawY = ((y * tileSize) - scrollOffset);
+
+            // wrap vertically to ensure seamless tiling
+            while (drawY < -tileSize) drawY += layerHeight * tileSize;
+            while (drawY >= layerHeight * tileSize) drawY -= layerHeight * tileSize;
+
+            Vec2 pos(x * tileSize, Math::Round(drawY));
+
+            if (x == layerWidth - 1)
+                mapTexture(sprite * tileSize, 0, tileSize, tileSize).mirrored().draw(pos);
             else
                 mapTexture(sprite * tileSize, 0, tileSize, tileSize).draw(pos);
-            // if (GetType(tile) == TileType::trap)
-            //     mapTex(10 * tileSize, 0, tileSize, tileSize).draw(pos);
         }
     }
 
-    DrawTraps(); // draw traps on top of the map
+    DrawTraps();
 }
