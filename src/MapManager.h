@@ -80,7 +80,7 @@ private:
     float bgReverseScrollSpeed = -120.0f; // reverse scroll speed
     double scrollOffset = 0.0; // current scroll offset
 
-    static constexpr float layerTime = 10.0f; // time per layer in seconds (excluding final layer)
+    static constexpr float layerTime = 30.0f; // time per layer in seconds (excluding final layer)
     float layerTimer = 0.0f;
 
     Array<Grid<int32>> map; // map with layers

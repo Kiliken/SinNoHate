@@ -33,6 +33,8 @@ void Main()
     TextureAsset::Register(U"MapTexture", U"Assets/MapTexture.png");
     TextureAsset::Register(U"EnemySprite", U"Assets/EnemySprite.png");
     TextureAsset::Register(U"PlayerSprite", U"Assets/PlayerSprite.png");
+    // Load font
+    FontAsset::Register(U"Text", FontMethod::MSDF, 48, U"Assets/DotGothic16-Regular.ttf");
 
     Array<Enemy> enemies;
     constexpr double InitialEnemySpawnInterval = 2.0;
@@ -90,7 +92,14 @@ void Main()
 
         map.UpdateMap(deltaTime, playerController, &enemies);
         // shop.UpdateShop(player); // update shop
-        playerController.Update(deltaTime);
+
+        // when player is inactive
+        if(map.layerSwitched){
+            playerController.Update(deltaTime, false);
+        }
+        else{
+            playerController.Update(deltaTime, true);
+        }
 
         // EnemyLoop
         for (auto enemy = enemies.begin(); enemy != enemies.end();)
