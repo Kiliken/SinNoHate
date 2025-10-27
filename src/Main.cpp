@@ -26,7 +26,7 @@ void Main()
     }
     
 
-    const Texture enemyPaletteTexture(U"Assets/PaletteTest.png");
+    const Texture enemyPaletteTexture(U"Assets/EnemyPalette.png");
 
     // Load textures and sprites
     //Texture mapTexture(U"map.png");
@@ -51,9 +51,9 @@ void Main()
         while (enemySpawnTime <= enemyAccumulatedTime)
         {
             enemyAccumulatedTime -= enemySpawnTime;
-            enemySpawnTime = Max(enemySpawnTime * 0.95, 0.3);
+            // enemySpawnTime = Max(enemySpawnTime * 0.95, 0.3);
             // enemies << GenerateEnemy();
-            enemies << Enemy(RandomUint8() % 7, &playerController);
+            enemies << Enemy(RandomUint8() % 7, &playerController); // RandomUint8() % (map.currentLayer + 1)
         }
 
         // debug
@@ -81,7 +81,8 @@ void Main()
                 map.StartNextLayer();
                 shop.ResetShop();
 
-                enemySpawnTime = 2.0; //change the enemey spawn count based on the level
+                enemySpawnTime -= 0.4; //change the enemey spawn count based on the level
+                enemySpawnTime = Math::Max(enemySpawnTime, 0.3);
             }
 
             
@@ -105,6 +106,7 @@ void Main()
             {
                 if (bullet->GetCollider()->intersects(enemy->GetCollider()))
                 {
+                    // spawn heart on 10%
                     bullet->OnHit();
                     enemy = enemies.erase(enemy);
                     erased = true;

@@ -13,6 +13,12 @@ Enemy::Enemy(int8_t t, PlayerController* p)
     playerCollider = p->Collider();
 
     enemyCollider.setR(20.0);
+
+    // Lust
+    if(enemyType == 5){
+        //make the other enemy
+    } 
+        
 }
 
 Enemy::~Enemy()
@@ -24,8 +30,52 @@ bool Enemy::Update()
 {
     const double deltaTime = Scene::DeltaTime();
     const double time = Scene::Time();
-    enemyPos.y -= (deltaTime * EnemySpeed);
-    enemyPos.x += Math::Sin(time)/2;
+    
+    const double directionX = (playerCollider->center.y <= enemyPos.y ? 
+        (Math::Abs(playerCollider->center.x - enemyPos.x)  > 20.0 ? 
+            Math::Clamp(playerCollider->center.x - enemyPos.x, -1.0, 1.0) : 0.0) : 0.0);
+    
+    Vec2 direction = playerCollider->center - enemyPos;
+    
+    //Math::Clamp(playerCollider->center.x - enemyPos.x,-1.0,1.0);
+    //Enemy movement
+    
+    
+    switch (enemyType)
+    {
+    case 0:
+        enemyPos.y -= (deltaTime * 100);
+        enemyPos += direction.normalized() * deltaTime * 50.0;
+        break;
+    case 1:
+        enemyPos.y -= (deltaTime * 100);
+        enemyPos.x += Math::Sin(time) * deltaTime * 50;
+        break;
+    case 2:
+        enemyPos.x += Math::Sin(time) * deltaTime * 50;
+        enemyPos.y -= ( Math::Abs(Math::Sin(time)) > 0.5 ?  deltaTime * 100 : deltaTime * -25 );
+        break;
+    case 3:
+        enemyPos.x +=  ( Math::Abs(Math::Cos(time)) > 0.5 ?  deltaTime * Math::Sin(time) * 100 : 0 );
+        enemyPos.y -= ( Math::Abs(Math::Cos(time)) < 0.5 ?  deltaTime * 100 : deltaTime * 25 );
+        break;
+    case 4:
+        enemyPos.y -= (deltaTime * 100);
+        break;
+    case 5:
+        enemyPos.x += Math::Sin(time) * deltaTime * 100;
+        enemyPos.y += Math::Cos(time) * deltaTime * 100;
+        enemyPos.y -= (deltaTime * 50.0);
+        break;
+    case 6:
+        enemyPos.y -= (deltaTime * 100);
+        enemyPos += direction.normalized() * deltaTime * 100.0;
+        break;
+    }
+   
+    
+    
+    
     enemyCollider.center = enemyPos;
 
     if (damageCooldown > 0){
