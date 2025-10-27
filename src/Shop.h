@@ -34,7 +34,7 @@ public:
 
 
 private:
-    Font font{ FontMethod::MSDF, 48 };  // placeholder font
+    Texture itemTexture; // placeholder, add later
     
     const int itemW = 100;
     const int itemH = 100;
@@ -44,7 +44,7 @@ private:
     // total width occupied by all items and gaps
     const int totalWidth = numItems * itemW + (numItems - 1) * spacing;
     const int startX = (Map::screenW - totalWidth) / 2; // leftmost item x
-    const int y = (Map::screenH - itemH) / 2;           // vertically centered
+    const int y = (Map::screenH - itemH) / 2 - 25;           // vertically centered
 
     // screen center
     const Vec2 center{Map::screenW / 2.0, Map::screenH / 2.0};
@@ -53,10 +53,12 @@ private:
     const Size bgSize{400, 240};
     const Vec2 bgPos{center.x - bgSize.x / 2, center.y - bgSize.y / 2};
 
-
+    Rect confirmButton{(Map::screenW - 120) / 2, y + itemH + 40, 120, 40};
 
     const Array<String> itemNames = { U"Heart", U"Bullet", U"Attack Speed" };  // placeholder names
     Array<Item> itemsInShop;   // 3 items
+
+    Optional<ItemType> selectedItem;
 
     int lifeIncrease = 1;
     int bulletExpansion = 5;

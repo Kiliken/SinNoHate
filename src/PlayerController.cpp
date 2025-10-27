@@ -191,8 +191,10 @@ void PlayerController::UpdateLife(int addValue)
     m_life = Clamp(m_life, 0, m_maxLife);
 }
 
-void PlayerController::Update(double deltaTime)
+void PlayerController::Update(double deltaTime, bool isActive)
 {
+    if(!isActive) return;
+
     Aiming();
     Shot();
     UpdateBullets(deltaTime);

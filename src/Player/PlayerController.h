@@ -96,7 +96,7 @@ class PlayerController{
 
         /// @brief 各状態の更新処理
         /// @param deltaTime 微小時間
-        void Update(double deltaTime);
+        void Update(double deltaTime, bool isActive);
 
         /// @brief 描画処置
         /// @param deltaTime 微小時間
