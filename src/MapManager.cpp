@@ -3,6 +3,7 @@
 Map::Map()
 {
     GenerateMap();
+    bgCurrentScrollSpeed = bgScrollSpeed;
 }
 
 
@@ -62,8 +63,17 @@ void Map::UpdateMap(double deltaTime, PlayerController& player, Array<Enemy>* en
 
 void Map::UpdateBackground(double deltaTime)
 {
-    double speed = reverseScroll ? bgReverseScrollSpeed : bgScrollSpeed;
-    scrollOffset += speed * deltaTime;
+    //double speed = reverseScroll ? bgReverseScrollSpeed : bgScrollSpeed;
+
+    if(reverseScroll){
+        if(bgCurrentScrollSpeed > bgReverseScrollSpeed){
+            bgCurrentScrollSpeed -= deltaTime * 30;
+        }
+        else{
+            bgCurrentScrollSpeed = bgReverseScrollSpeed;
+        }
+    }
+    scrollOffset += bgCurrentScrollSpeed * deltaTime;
 
     // wrap within the height of one full tile cycle
     double totalHeight = layerHeight * tileSize;
@@ -86,6 +96,9 @@ void Map::EndLayer()
         currentLayer++;
         Console << U"Layer cleared. Moved to layer " << currentLayer;
     }
+    else{
+        allLayersCleared = true;
+    }
     layerSwitched = true;
 }
 
@@ -95,6 +108,30 @@ void Map::StartNextLayer()
     spawningTraps = true; // resume spawning traps
     layerSwitched = false;
     Console << U"Started layer " << currentLayer;
+}
+
+
+// when the player dies/restart
+void Map::ResetMap()
+{
+    currentLayer = 0;
+    layerTimer = 0;
+    scrollOffset = 0;
+
+    ClearTraps();
+    spawningTraps = true;
+
+    layerSwitched = false;
+
+    Console << U"Map reset";
+}
+
+
+// when the player wins
+void Map::MapGameClear(){
+    ClearTraps();
+    spawningTraps = false;
+    reverseScroll = true;
 }
 
 

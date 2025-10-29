@@ -15,8 +15,10 @@ Enemy::Enemy(int8_t t, PlayerController* p)
     enemyCollider.setR(20.0);
 
     // Lust
-    if(enemyType == 5){
+    if(enemyType == 4){
         //make the other enemy
+        lustShadowPos = enemyPos;
+        lustShadowCollider.setR(20.0);
     } 
         
 }
@@ -31,12 +33,8 @@ bool Enemy::Update()
     const double deltaTime = Scene::DeltaTime();
     const double time = Scene::Time();
     
-    const double directionX = (playerCollider->center.y <= enemyPos.y ? 
-        (Math::Abs(playerCollider->center.x - enemyPos.x)  > 20.0 ? 
-            Math::Clamp(playerCollider->center.x - enemyPos.x, -1.0, 1.0) : 0.0) : 0.0);
-    
     Vec2 direction = playerCollider->center - enemyPos;
-    
+    direction.normalize();
     //Math::Clamp(playerCollider->center.x - enemyPos.x,-1.0,1.0);
     //Enemy movement
     
@@ -44,8 +42,8 @@ bool Enemy::Update()
     switch (enemyType)
     {
     case 0:
-        enemyPos.y -= (deltaTime * 100);
-        enemyPos += direction.normalized() * deltaTime * 50.0;
+        //enemyPos.y -= (deltaTime * 100);
+        enemyPos +=  direction * deltaTime * (direction.y < 0 ? 100.0 : 50.0);
         break;
     case 1:
         enemyPos.y -= (deltaTime * 100);
@@ -61,6 +59,9 @@ bool Enemy::Update()
         break;
     case 4:
         enemyPos.y -= (deltaTime * 100);
+        enemyPos.x += Math::Sin(time) * deltaTime * 50;
+        lustShadowPos.y -= (deltaTime * 100);
+        lustShadowPos.x += Math::Sin(time) * deltaTime * -50;
         break;
     case 5:
         enemyPos.x += Math::Sin(time) * deltaTime * 100;
@@ -68,15 +69,16 @@ bool Enemy::Update()
         enemyPos.y -= (deltaTime * 50.0);
         break;
     case 6:
-        enemyPos.y -= (deltaTime * 100);
-        enemyPos += direction.normalized() * deltaTime * 100.0;
+        //enemyPos.y -= (deltaTime * 100);
+        enemyPos +=  direction * deltaTime * (direction.y < 0 ? 200.0 : 150.0);
         break;
     }
-   
-    
     
     
     enemyCollider.center = enemyPos;
+    if(enemyType == 4)
+        lustShadowCollider.center = lustShadowPos;
+
 
     if (damageCooldown > 0){
         damageCooldown -= deltaTime;
@@ -86,6 +88,13 @@ bool Enemy::Update()
     {
         player->OnDamage();
         damageCooldown = 10.0;
+    }
+
+    if (enemyType == 4 && playerCollider->intersects(lustShadowCollider) && damageCooldown <= 0)
+    {
+        player->OnDamage();
+        damageCooldown = 10.0;
+        Print << U"SHADOW HIT";
     }
 
 
@@ -101,6 +110,9 @@ void Enemy::Draw()
 	const int32 x = (t / 120 % 5);
     enemyTexture((32 * x),0,32,32).resized(64).drawAt(enemyPos); // add color
 
+    if(enemyType == 4){
+        enemyTexture((32 * x),0,32,32).resized(64).drawAt(lustShadowPos, ColorF(0.7, 0.7,0.7));
+    }
     //enemyCollider.draw();
 
 }
