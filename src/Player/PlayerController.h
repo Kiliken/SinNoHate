@@ -25,7 +25,9 @@ class PlayerController{
         int m_bulletRadius = 10;        // 弾の大きさ
         double m_shotCoolTime = 0.5;			// ショットのクールダウン時間：秒
         double m_shotCoolDown = m_shotCoolTime;				// ショットのクールタイム
-        bool m_inFinalLayer = false;
+        bool m_inFinalLayer = false;        // 最終layerか
+        bool m_hasGameOver = false;             // ゲームオーバーしているか
+        bool m_hasGameClear = false;        // ゲームクリアしているか
         bool m_shotable = true;
         Array<BulletBase*> m_bullets;
 
@@ -102,7 +104,11 @@ class PlayerController{
         /// @param deltaTime 微小時間
         void Draw(double deltaTime);
 
+        /// @brief 最終layerに到達
         void OnFinalLayer();
+
+        /// @brief ゲームクリア
+        void OnGameClear();
 
         /// @brief 当たり判定を取得
         Circle* Collider();
