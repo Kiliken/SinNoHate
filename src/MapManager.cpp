@@ -96,6 +96,9 @@ void Map::EndLayer()
         currentLayer++;
         Console << U"Layer cleared. Moved to layer " << currentLayer;
     }
+    else{
+        allLayersCleared = true;
+    }
     layerSwitched = true;
 }
 

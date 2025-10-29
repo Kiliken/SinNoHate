@@ -49,6 +49,7 @@ public:
     
     int currentLayer = 0;
     bool layerSwitched = false; // to add delay between layers
+    bool allLayersCleared = false;
     bool reverseScroll = false;
 
 

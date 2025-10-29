@@ -101,7 +101,7 @@ void Main()
                 }
             }
             // game clear
-            {
+            else if(map.allLayersCleared){
                 enemies.clear();
                 map.MapGameClear();
             }
