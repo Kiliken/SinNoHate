@@ -60,6 +60,8 @@ public:
 	void Draw();
     void EndLayer();
     void StartNextLayer();
+    void ResetMap();
+    void MapGameClear();
 
     // trap management
     Array<Trap> traps;
@@ -78,6 +80,7 @@ private:
     Array<float> bgTileYPos; // y positions of background tiles in texture
     float bgScrollSpeed = 60.0f; // background scroll speed
     float bgReverseScrollSpeed = -120.0f; // reverse scroll speed
+    float bgCurrentScrollSpeed = 60.0f;
     double scrollOffset = 0.0; // current scroll offset
 
     static constexpr float layerTime = 30.0f; // time per layer in seconds (excluding final layer)

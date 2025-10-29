@@ -73,30 +73,38 @@ void Main()
             // map.GoToNextLayer();
             // shop.ResetShop();
             // shop.ShowShop();
-            map.reverseScroll = !map.reverseScroll;
-            
+
+            //map.ResetMap();
+            enemies.clear();
+            map.MapGameClear();
         }
 
         // handle layer switching and shop
         if (map.layerSwitched)
         {
-            // wait for player to finish shopping
-            if (!shop.shopActive)
-                shop.ShowShop();
-
-            shop.UpdateShop(playerController);
             enemies.clear();
+            // up to final boss
+            if(map.currentLayer <= map.layerCount){
+                // wait for player to finish shopping
+                if (!shop.shopActive)
+                    shop.ShowShop();
 
-            if (shop.itemBought)
-            {
-                map.StartNextLayer();
-                shop.ResetShop();
+                shop.UpdateShop(playerController);
+                
+                if (shop.itemBought)
+                {
+                    map.StartNextLayer();
+                    shop.ResetShop();
 
-                enemySpawnTime -= 0.4; //change the enemey spawn count based on the level
-                enemySpawnTime = Math::Max(enemySpawnTime, 0.3);
+                    enemySpawnTime -= 0.4; //change the enemey spawn count based on the level
+                    enemySpawnTime = Math::Max(enemySpawnTime, 0.3);
+                }
             }
-
-            
+            // game clear
+            {
+                enemies.clear();
+                map.MapGameClear();
+            }
         }
 
         map.UpdateMap(deltaTime, playerController, &enemies);
