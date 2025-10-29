@@ -18,6 +18,8 @@ public:
 	void draw();
 
 	bool gameStarted = false;
+	bool startingSequence = false;
+	float startingSeqCounter = 0;
 
 private:
 	Button* playButton;
@@ -34,5 +36,16 @@ private:
 	const s3d::Texture cloudl1{U"Assets/TitlescreenAssets/cloudleft1.png"};
 	const s3d::Texture cloudl2{U"Assets/TitlescreenAssets/cloudleft2.png"};
 	const s3d::Texture inferno{U"Assets/TitlescreenAssets/inferno.png"};
+	const s3d::Texture entry{U"Assets/TitlescreenAssets/entry.png"};
+
+
+	Vec2 basePos = Vec2(Scene::Width()/2, Scene::Height()/2);
+	Vec2 skyPos = Vec2(Scene::Width()/2, Scene::Height()/2);
+	Vec2 cloudRPos = Vec2(Scene::Width()/2, Scene::Height()/2);
+	Vec2 cloudLPos = Vec2(Scene::Width()/2, Scene::Height()/2);
+	Vec2 fallingPos = Vec2(Scene::Width()/2, Scene::Height()/2);
+	Vec2 entryPos = Vec2(Scene::Width()/2, Scene::Height()/2 + 600);
+	Vec2 playerSpriteCallibration = Vec2(1,9);
+
 
 };

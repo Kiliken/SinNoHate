@@ -53,9 +53,11 @@ void Main()
         if (!title.gameStarted) 
         {
             title.update();
-            title.draw();
+            //title.draw();
             continue;
         }
+
+
         const double deltaTime = Scene::DeltaTime();
         enemyAccumulatedTime += deltaTime;
 
@@ -151,5 +153,9 @@ void Main()
             Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
             enemy.Draw();
         } 
+
+        if (title.gameStarted && title.startingSeqCounter > 0 && title.startingSeqCounter < 4) {
+            title.update();
+        }
     }
 }
