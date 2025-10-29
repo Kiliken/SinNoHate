@@ -17,6 +17,9 @@ private:
     double EnemySpeed = 100.0;
     double damageCooldown = 0;
 
+    Vec2 lustShadowPos;
+    Circle lustShadowCollider;
+
     PlayerController* player;
     Circle* playerCollider;
 
