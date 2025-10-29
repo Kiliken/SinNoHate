@@ -5,7 +5,6 @@
 #include "Enemy.h"
 #include "Title.h"
 
-
 struct PaletteSettings
 {
     unsigned int currentPalette;
@@ -18,20 +17,24 @@ void Main()
     Window::SetTitle(U"罪の果て");
     Window::Resize(512, 480);
 
-    const PixelShader paletteSwap = HLSL{ U"Assets/shaders/colorSwap.hlsl", U"PS_PaletteSwap" };
-    const ScopedRenderStates2D sampler{ SamplerState::ClampNearest };
+    const PixelShader paletteSwap = HLSL{U"Assets/shaders/colorSwap.hlsl", U"PS_PaletteSwap"};
+    const ScopedRenderStates2D sampler{SamplerState::ClampNearest};
 
     ConstantBuffer<PaletteSettings> enemyPalette[7];
+    ConstantBuffer<PaletteSettings> stagePalette[8];
 
-    for (int i=0;i<7;i++){
+    for (int i = 0; i < 7; i++)
+    {
         enemyPalette[i]->currentPalette = static_cast<unsigned int>(i);
+        stagePalette[i]->currentPalette = static_cast<unsigned int>(i);
     }
-    
+    stagePalette[7]->currentPalette = static_cast<unsigned int>(7);
 
     const Texture enemyPaletteTexture(U"Assets/EnemyPalette.png");
+    const Texture stagePaletteTexture(U"Assets/StagePalette.png");
 
     // Load textures and sprites
-    //Texture mapTexture(U"map.png");
+    // Texture mapTexture(U"map.png");
     TextureAsset::Register(U"MapTexture", U"Assets/MapTexture.png");
     TextureAsset::Register(U"EnemySprite", U"Assets/EnemySprite.png");
     TextureAsset::Register(U"PlayerSprite", U"Assets/PlayerSprite.png");
@@ -50,7 +53,7 @@ void Main()
 
     while (System::Update())
     {
-        if (!title.gameStarted) 
+        if (!title.gameStarted)
         {
             title.update();
             title.draw();
@@ -74,7 +77,7 @@ void Main()
             // shop.ResetShop();
             // shop.ShowShop();
 
-            //map.ResetMap();
+            // map.ResetMap();
             enemies.clear();
             map.MapGameClear();
         }
@@ -84,24 +87,26 @@ void Main()
         {
             enemies.clear();
             // up to final boss
-            if(map.currentLayer <= map.layerCount){
+            if (map.currentLayer <= map.layerCount)
+            {
                 // wait for player to finish shopping
                 if (!shop.shopActive)
                     shop.ShowShop();
 
                 shop.UpdateShop(playerController);
-                
+
                 if (shop.itemBought)
                 {
                     map.StartNextLayer();
                     shop.ResetShop();
 
-                    enemySpawnTime -= 0.4; //change the enemey spawn count based on the level
+                    enemySpawnTime -= 0.4; // change the enemey spawn count based on the level
                     enemySpawnTime = Math::Max(enemySpawnTime, 0.3);
                 }
             }
             // game clear
-            else if(map.allLayersCleared){
+            else if (map.allLayersCleared)
+            {
                 enemies.clear();
                 map.MapGameClear();
             }
@@ -111,10 +116,12 @@ void Main()
         // shop.UpdateShop(player); // update shop
 
         // when player is inactive
-        if(map.layerSwitched){
+        if (map.layerSwitched)
+        {
             playerController.Update(deltaTime, false);
         }
-        else{
+        else
+        {
             playerController.Update(deltaTime, true);
         }
 
@@ -144,20 +151,30 @@ void Main()
                 ++enemy;
         }
 
-        
         // Draw the map
-        map.Draw();
+        {
+            
+            Graphics2D::SetPSTexture(1, stagePaletteTexture);
+            const ScopedCustomShader2D shader{paletteSwap};
+            Graphics2D::SetPSConstantBuffer(1, stagePalette[map.currentLayer]);
+
+            map.Draw();
+        }
+
+        // RESET SHADER HERE
         playerController.Draw(deltaTime);
         shop.DrawShop();
 
-        // Draw the enemies
-        Graphics2D::SetPSTexture(1, enemyPaletteTexture);
-        const ScopedCustomShader2D shader{ paletteSwap }; // enemy shader palette
-        
-        for (auto &enemy : enemies)
         {
-            Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
-            enemy.Draw();
-        } 
+            // Draw the enemies
+            Graphics2D::SetPSTexture(1, enemyPaletteTexture);
+            const ScopedCustomShader2D shader{paletteSwap}; // enemy shader palette
+
+            for (auto &enemy : enemies)
+            {
+                Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
+                enemy.Draw();
+            }
+        }
     }
 }
