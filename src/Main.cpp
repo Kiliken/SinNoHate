@@ -50,12 +50,12 @@ void Main()
         const double deltaTime = Scene::DeltaTime();
         enemyAccumulatedTime += deltaTime;
 
-        while (enemySpawnTime <= enemyAccumulatedTime)
+        while (enemySpawnTime <= enemyAccumulatedTime && map.currentLayer < map.layerCount - 1)
         {
             enemyAccumulatedTime -= enemySpawnTime;
             // enemySpawnTime = Max(enemySpawnTime * 0.95, 0.3);
             // enemies << GenerateEnemy();
-            enemies << Enemy(RandomUint8() % 7, &playerController); // RandomUint8() % (map.currentLayer + 1)
+            enemies << Enemy(RandomUint8() % (map.currentLayer + 1), &playerController);
         }
 
         // debug
