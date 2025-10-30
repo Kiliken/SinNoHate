@@ -118,7 +118,7 @@ void Main()
         // shop.UpdateShop(player); // update shop
 
         // when player is inactive
-        if (map.layerSwitched)
+        if (map.layerSwitched || title.startingSeqCounter < 2.35)
         {
             playerController.Update(deltaTime, false);
         }
