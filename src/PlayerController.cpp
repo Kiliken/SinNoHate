@@ -3,11 +3,11 @@
 
 PlayerController::PlayerController(Vec2 firstPosition)
 {
+    m_currentLayer = 0;
     m_firstPosition = firstPosition;
     m_position = m_firstPosition;
-    m_sprite = TextureAsset{ U"PlayerSprite" };
-    m_crossHair = Texture{ U"Assets/crossHair.png" };
-    m_crossHairRegister = m_crossHair((64 * 0),0,64,64);
+    m_currentCrossHair = m_crossHair;
+    m_crossHairRegister = m_currentCrossHair((64 * 0),0,64,64);
     m_collider = Circle{ m_position, 16.0 };
 }
 
@@ -148,7 +148,7 @@ void PlayerController::Shot()
             }
         }
         // ない場合、新たに生成
-        BulletBase* bullet = new BulletBase{ m_shotPos, m_aimDirection, m_bulletRadius };
+        BulletBase* bullet = new BulletBase{ m_shotPos, m_aimDirection, m_bulletRadius, m_currentLayer };
         m_shotable = false;
         m_crossHairAnim = Async([this]() {CrossHairAnimation(m_shotCoolTime, Scene::DeltaTime());});
         m_bullets << bullet;
@@ -160,11 +160,11 @@ void PlayerController::CrossHairAnimation(double durationSec, double deltaTime)
     double timeFramePerSec = 0.0;
     while (timeFramePerSec <= durationSec){
         const int32 n = (timeFramePerSec / durationSec) * 5;
-        m_crossHairRegister = m_crossHair((64 * n),0,64,64);
+        m_crossHairRegister = m_currentCrossHair((64 * n),0,64,64);
         timeFramePerSec += deltaTime;
         System::Sleep(deltaTime * 1s);
     }
-    m_crossHairRegister = m_crossHair((64 * 0),0,64,64);
+    m_crossHairRegister = m_currentCrossHair((64 * 0),0,64,64);
 }
 
 void PlayerController::UpdateVelocityYByGravity(double deltaTime)
@@ -199,12 +199,23 @@ void PlayerController::HealLife()
     UpdateLife(1);
 }
 
+void PlayerController::OnDownLayer()
+{
+    m_currentLayer++;
+    m_sprite = m_sprites[m_currentLayer];
+    if (m_currentLayer >= m_changeCrossHairLayer){
+        m_currentCrossHair = m_crossHairEx;
+        m_crossHairAnim = Async([this]() {CrossHairAnimation(m_shotCoolTime, Scene::DeltaTime());});
+    }
+}
+
 void PlayerController::UpGrade_IncreaseMaxLife(int addValue)
 {
     if (m_hasGameClear) return;
     if (m_hasGameOver) return;
     m_maxLife += addValue;
     m_life += addValue;
+    OnDownLayer();
 }
 
 void PlayerController::UpGrade_ExpansionBullet(int expansValue)
@@ -212,6 +223,7 @@ void PlayerController::UpGrade_ExpansionBullet(int expansValue)
     if (m_hasGameClear) return;
     if (m_hasGameOver) return;
     m_bulletRadius += expansValue;
+    OnDownLayer();
 }
 
 void PlayerController::UpGrade_DecreaseAttackSpan(double subtractValue)
@@ -223,6 +235,7 @@ void PlayerController::UpGrade_DecreaseAttackSpan(double subtractValue)
         return;
     }
     m_shotCoolTime -= subtractValue;
+    OnDownLayer();
 }
 
 void PlayerController::UpdateLife(int addValue)
@@ -254,7 +267,7 @@ void PlayerController::Draw(double deltaTime)
     const double r = abs(m_velocity.y) / abs(m_moveForce);
     const int32 x = (t / (int)(m_animSpeed * 60 / (r == 0 ? 1 : r)) % 4);
     Print << x;
-    m_sprite((64 * (x == 3 ? 2 : x)),0,64,64).drawAt(m_position);
+    m_sprites[m_currentLayer]((64 * (x == 3 ? 2 : x)),0,64,64).drawAt(m_position);
     m_crossHairRegister.rotated(m_aimAngle).drawAt(m_shotPos);
 
     for (auto& bullet : m_bullets){
