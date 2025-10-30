@@ -24,8 +24,7 @@ class PlayerController{
         int m_maxLife = 3;				// 最大ライフ
         int m_life = m_maxLife;					// 現在のライフ
         int m_bulletRadius = 10;        // 弾の大きさ
-        double m_shotCoolTime = 2;			// ショットのクールダウン時間：秒
-        double m_shotCoolDown = m_shotCoolTime;				// ショットのクールタイム
+        double m_shotCoolTime = 0.5;			// ショットのクールダウン時間：秒
         bool m_inFinalLayer = false;        // 最終layerか
         bool m_hasGameOver = false;             // ゲームオーバーしているか
         bool m_hasGameClear = false;        // ゲームクリアしているか

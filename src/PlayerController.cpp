@@ -49,9 +49,7 @@ void PlayerController::UpdateShotCoolTime(double deltaTime)
     if (m_hasGameOver) return;
     if (m_shotable) return;
 
-    m_shotCoolDown -= deltaTime;
-    if (m_shotCoolDown < 0){
-        m_shotCoolDown = m_shotCoolTime;
+    if (m_crossHairAnim.isReady()){
         m_shotable = true;
     }
 }
@@ -165,7 +163,7 @@ void PlayerController::CrossHairAnimation(double durationSec, double deltaTime)
         Print << n;
         m_crossHairRegister = m_crossHair((64 * n),0,64,64);
         timeFramePerSec += deltaTime;
-        System::Sleep(deltaTime);
+        System::Sleep(deltaTime * 1s);
     }
     m_crossHairRegister = m_crossHair((64 * 0),0,64,64);
 }
