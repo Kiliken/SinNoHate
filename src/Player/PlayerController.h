@@ -11,17 +11,20 @@ class PlayerController{
         const double m_gravityScale = 500.0;
         const double m_shootPosDistance = 50.0;
         const double m_animSpeed = 1.0;
+        const int m_changeCrossHairLayer = 3;   // クロスヘアが変わるレイヤー番号
         Vec2 m_velocity{ 0, 0 };				// 現在の移動速度
         Vec2 m_position{ 0, 0 };				// 現在の座標
-        Texture m_crossHair;                    // クロスヘアのおおもとのsprite
+        Texture m_crossHair = Texture{ U"Assets/crossHair.png" };                    // 通常クロスヘアのおおもとのsprite
+        Texture m_crossHairEx = Texture{ U"Assets/crossHair_ex.png" };                    // 通常クロスヘアのおおもとのsprite
+        Texture m_currentCrossHair;             // 現在のクロスヘアのsprite
         Vec2 m_shotPos{ 0, 0 };
         Vec2 m_aimDirection{ 0, 0 };
         double m_aimAngle = 0;
-
-        Texture m_sprite;				// プレイヤーの見た目のテクスチャ
+        Texture m_sprite = TextureAsset{ U"PlayerSprite" };				// プレイヤーの現在の見た目のテクスチャ
         TextureRegion m_crossHairRegister;    // クロスヘアの見た目のテクスチャ
         Circle m_collider;
         Vec2 m_firstPosition;			// 初期位置
+        int m_currentLayer;
         int m_maxLife = 3;				// 最大ライフ
         int m_life = m_maxLife;					// 現在のライフ
         int m_bulletRadius = 10;        // 弾の大きさ
@@ -84,6 +87,9 @@ class PlayerController{
 
         /// @brief ライフ回復処理
         void HealLife();
+
+        /// @brief レイヤー番号が上がる
+        void OnDownLayer();
 
         /// @brief 最大ライフを増加させる
         /// @param addValue 加算値

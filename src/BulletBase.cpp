@@ -11,12 +11,16 @@ bool BulletBase::IsActive()
     return m_isActive;
 }
 
-BulletBase::BulletBase(Vec2 firstPosition, Vec2 firstDirection, int radius)
+BulletBase::BulletBase(Vec2 firstPosition, Vec2 firstDirection, int radius, int layerIndex)
 {
     m_isActive = true;
     m_position = firstPosition;
-    m_sprite = Texture{ U"Assets/shotSprite.png" };
-    m_collider = Circle{ m_position, radius };
+    m_radius = radius;
+    if (layerIndex < m_swapSpriteLayerID)
+        m_sprite = Texture{ U"Assets/shotSprite.png" };
+    else
+        m_sprite = Texture{ U"Assets/shotSprite_ex.png" };
+    m_collider = Circle{ m_position, m_radius };
     m_moveDirection = firstDirection;
     m_color = Palette::Red;
 }
@@ -46,7 +50,7 @@ void BulletBase::Draw()
     const uint64 t = Time::GetMillisec();
     const int32 x = (t / 60 % 3);
     const double angle = Math::Atan2(m_moveDirection.normalized().x * -1, m_moveDirection.normalized().y);
-    m_sprite((64 * x),0,64,64).rotated(angle).drawAt(m_position);
+    m_sprite((64 * x),0,64,64).resized(m_radius / 10 * 64).rotated(angle).drawAt(m_position);
 }
 
 void BulletBase::OnHit()
