@@ -65,7 +65,10 @@ void Title::draw()
 		cloudr2.drawAt(cloudRPos);
 		start2.drawAt(fallingPos);
 		entry.drawAt(entryPos);
-		p2.drawAt(basePos + playerSpriteCallibration);
+		if (startingSeqCounter < 2.35) {
+			p2.drawAt(basePos + playerSpriteCallibration);
+		}
+
 	} else {
 		bg1.drawAt(basePos);
 		title1.drawAt(basePos);

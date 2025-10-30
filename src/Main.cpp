@@ -179,11 +179,11 @@ void Main()
                 enemy.Draw();
             }
 
-            Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
-            enemy.Draw();
+            // Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
+            // enemy.Draw();
         } 
 
-        if (title.gameStarted && title.startingSeqCounter > 0 && title.startingSeqCounter < 4) {
+        if (title.gameStarted && title.startingSeqCounter > 0 && title.startingSeqCounter < 3) {
             title.update();
 
         }
