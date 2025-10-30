@@ -253,7 +253,7 @@ void PlayerController::Draw(double deltaTime)
     const uint64 t = Time::GetMillisec();
     const double r = abs(m_velocity.y) / abs(m_moveForce);
     const int32 x = (t / (int)(m_animSpeed * 60 / (r == 0 ? 1 : r)) % 4);
-    Print << x;
+    //Print << x;
     m_sprite((64 * (x == 3 ? 2 : x)),0,64,64).drawAt(m_position);
     m_crossHairRegister.rotated(m_aimAngle).drawAt(m_shotPos);
 

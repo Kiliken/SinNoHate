@@ -27,6 +27,6 @@ bool Hearts::Update(){
 
 void Hearts::Draw(){
 
-    sprite.drawAt(collider.center);
+    sprite.resized(32).drawAt(collider.center);
 
 }

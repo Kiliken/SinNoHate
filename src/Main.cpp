@@ -1,4 +1,4 @@
-﻿# include "utils.h"
+﻿#include "utils.h"
 
 struct PaletteSettings
 {
@@ -33,7 +33,8 @@ void Main()
     TextureAsset::Register(U"MapTexture", U"Assets/MapTexture.png");
     TextureAsset::Register(U"EnemySprite", U"Assets/EnemySprite.png");
     TextureAsset::Register(U"PlayerSprite", U"Assets/PlayerSprite.png");
-    TextureAsset::Register(U"HeartSprite", U"Assets/EnemyPalette.png");
+    TextureAsset::Register(U"HeartSprite", U"Assets/heartSprite.png");
+    TextureAsset::Register(U"BossSprite", U"Assets/bossSprite.png");
     // Load font
     FontAsset::Register(U"Text", FontMethod::MSDF, 48, U"Assets/DotGothic16-Regular.ttf");
 
@@ -55,10 +56,9 @@ void Main()
         if (!title.gameStarted)
         {
             title.update();
-            //title.draw();
+            // title.draw();
             continue;
         }
-
 
         const double deltaTime = Scene::DeltaTime();
         enemyAccumulatedTime += deltaTime;
@@ -140,9 +140,9 @@ void Main()
             {
                 if (bullet->GetCollider()->intersects(enemy->GetCollider()))
                 {
-                    if(RandomInt32() % 20 < 1)
+                    if (RandomInt32() % 20 < 1)
                         hearts << Hearts(enemy->GetCollider().center, &playerController);
-                    
+
                     bullet->OnHit();
                     enemy = enemies.erase(enemy);
                     erased = true;
@@ -156,7 +156,21 @@ void Main()
 
         UTILS::HeartsLoop(&hearts);
 
-        boss.Update();
+        if (map.currentLayer == map.layerCount - 1 && boss.GetStatus() && !map.layerSwitched)
+        {
+            
+            boss.Update();
+            for (const auto &bullet : playerController.GetBullets())
+            {
+                if (bullet->GetCollider()->intersects(boss.GetCollider()))
+                {
+                    bullet->OnHit();
+                    boss.GetDamage();
+                    break;
+                }
+            }
+            
+        }
 
         // Draw the map
         {
@@ -170,7 +184,7 @@ void Main()
 
         // RESET SHADER HERE
         playerController.Draw(deltaTime);
-        shop.DrawShop();
+       
 
         {
 
@@ -184,20 +198,26 @@ void Main()
                 enemy.Draw();
             }
 
-            // Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
-            // enemy.Draw();
-        } 
-
-        boss.Draw();
-
-        if (title.gameStarted && title.startingSeqCounter > 0 && title.startingSeqCounter < 3) {
-            title.update();
-
+            if (map.currentLayer == map.layerCount - 1 && boss.GetStatus())
+            {
+                Graphics2D::SetPSConstantBuffer(1, enemyPalette[boss.GetCurretType()]);
+                boss.Draw();
+                
+            }
         }
 
         for (auto &heart : hearts)
         {
             heart.Draw();
         }
+
+        shop.DrawShop();
+
+        if (title.gameStarted && title.startingSeqCounter > 0 && title.startingSeqCounter < 3)
+        {
+            title.update();
+        }
+
+        
     }
 }

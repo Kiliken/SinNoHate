@@ -8,6 +8,7 @@ public:
 
 private:
     int8_t curretType;
+    int8_t hp = 50;
 
     Texture sprite;
     Vec2 pos;
@@ -15,7 +16,9 @@ private:
     double speed = 100.0;
     double damageCooldown = 0;
     double facing = -1.0;
-    double switchFase = 10.0;
+    double switchFase = 5.0;
+    bool isAlive = true;
+    
 
     Vec2 lustShadowPos;
     Circle lustShadowCollider;
@@ -30,5 +33,7 @@ public:
     void Draw();
     Circle GetCollider();
 
-    int8_t GetEnemyType();
+    int8_t GetCurretType();
+    bool GetStatus();
+    void GetDamage();
 };

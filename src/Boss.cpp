@@ -4,8 +4,8 @@
 Boss::Boss(PlayerController* p)
 {
     // textureAsset constant
-    sprite = TextureAsset(U"EnemySprite");
-    pos = RandomVec2({ 20, Scene::Width() - 20 }, Scene::Height() + 20);
+    sprite = TextureAsset(U"BossSprite");
+    pos = {Scene::Width()/2, Scene::Height() - 50};
     speed = 0;
     player = p;
     playerCollider = p->Collider();
@@ -71,11 +71,11 @@ bool Boss::Update()
     
 
     {
-        if(pos.x < 20.0)
-            pos.x = 20.0;
+        if(pos.x < 30.0)
+            pos.x = 30.0;
 
-        if(pos.x > Scene::Width() - 20.0)
-            pos.x = Scene::Width() - 20.0;
+        if(pos.x > Scene::Width() - 30.0)
+            pos.x = Scene::Width() - 30.0;
 
     }
     
@@ -96,7 +96,7 @@ bool Boss::Update()
 
     if (curretType == 4 && playerCollider->intersects(lustShadowCollider) && damageCooldown <= 0)
     {
-        player->OnDamage();
+        //player->OnDamage();
         damageCooldown = 10.0;
         Print << U"SHADOW HIT";
     }
@@ -106,18 +106,22 @@ bool Boss::Update()
     }
 
     if(switchFase <= 0 ){
-        curretType = RandomInt32() % 7;
-        switchFase = 30.0;
+        curretType = RandomUint8() % 7;
+        // Print << curretType;
+        if( curretType == 4 )
+            lustShadowPos = pos;
+
+        switchFase = 5.0;
     }
 
-    if(pos.y < -20){
-        pos.y = -15;
-        facing = 1.0;
+    if(pos.y < -5){
+        pos.y = 0;
+        facing = 2.5;
     }
 
-    if(pos.y > Scene::Height() + 20){
-        pos.y > Scene::Height() + 15;
-        facing = -1.0;
+    if(pos.y > Scene::Height() + 5){
+        pos.y = Scene::Height();
+        facing = -1.5;
     }
         
 
@@ -128,10 +132,10 @@ void Boss::Draw()
 {
     const uint64 t = Time::GetMillisec();
 	const int32 x = (t / 120 % 5);
-    sprite((32 * x),0,32,32).resized(128).drawAt(pos); // add color
+    sprite((128 * x),0,128,128).resized(256).drawAt(pos); // add color
 
     if(curretType == 4){
-        sprite((32 * x),0,32,32).resized(128).drawAt(lustShadowPos, ColorF(0.7, 0.7,0.7));
+        sprite((128 * x),0,128,128).resized(256).drawAt(lustShadowPos, ColorF(0.7, 0.7,0.7));
     }
     //enemyCollider.draw();
 
@@ -139,4 +143,13 @@ void Boss::Draw()
 
 Circle Boss::GetCollider() { return collider; }
 
-int8_t Boss::GetEnemyType() { return curretType; }
+int8_t Boss::GetCurretType() { return curretType; }
+
+bool Boss::GetStatus() { return isAlive; }
+
+void Boss::GetDamage() {
+    hp--;
+
+    if(hp < 0)
+        isAlive = false; //GAME WON!
+}
