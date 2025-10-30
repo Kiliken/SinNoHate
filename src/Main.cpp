@@ -56,9 +56,11 @@ void Main()
         if (!title.gameStarted)
         {
             title.update();
-            title.draw();
+            //title.draw();
             continue;
         }
+
+
         const double deltaTime = Scene::DeltaTime();
         enemyAccumulatedTime += deltaTime;
 
@@ -166,6 +168,7 @@ void Main()
         shop.DrawShop();
 
         {
+<<<<<<< HEAD
             // Draw the enemies
             Graphics2D::SetPSTexture(1, enemyPaletteTexture);
             const ScopedCustomShader2D shader{paletteSwap}; // enemy shader palette
@@ -175,6 +178,14 @@ void Main()
                 Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
                 enemy.Draw();
             }
+=======
+            Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
+            enemy.Draw();
+        } 
+
+        if (title.gameStarted && title.startingSeqCounter > 0 && title.startingSeqCounter < 4) {
+            title.update();
+>>>>>>> chen
         }
     }
 }
