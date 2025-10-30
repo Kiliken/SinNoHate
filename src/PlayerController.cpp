@@ -160,7 +160,6 @@ void PlayerController::CrossHairAnimation(double durationSec, double deltaTime)
     double timeFramePerSec = 0.0;
     while (timeFramePerSec <= durationSec){
         const int32 n = (timeFramePerSec / durationSec) * 5;
-        Print << n;
         m_crossHairRegister = m_crossHair((64 * n),0,64,64);
         timeFramePerSec += deltaTime;
         System::Sleep(deltaTime * 1s);
