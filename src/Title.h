@@ -6,7 +6,7 @@
 class Title
 {
 public:
-
+	
 	// Constructor (must be implemented)
 	Title();
 	~Title();

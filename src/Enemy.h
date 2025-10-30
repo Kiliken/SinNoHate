@@ -23,6 +23,7 @@ private:
     PlayerController* player;
     Circle* playerCollider;
 
+    
 public:
 
     bool Update();

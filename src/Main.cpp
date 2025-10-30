@@ -1,9 +1,4 @@
-﻿#include <Siv3D.hpp> // Siv3D v0.6.16
-#include "MapManager.h"
-#include "Player/PlayerController.h"
-#include "Shop.h"
-#include "Enemy.h"
-#include "Title.h"
+﻿# include "utils.h"
 
 struct PaletteSettings
 {
@@ -38,10 +33,12 @@ void Main()
     TextureAsset::Register(U"MapTexture", U"Assets/MapTexture.png");
     TextureAsset::Register(U"EnemySprite", U"Assets/EnemySprite.png");
     TextureAsset::Register(U"PlayerSprite", U"Assets/PlayerSprite.png");
+    TextureAsset::Register(U"HeartSprite", U"Assets/EnemyPalette.png");
     // Load font
     FontAsset::Register(U"Text", FontMethod::MSDF, 48, U"Assets/DotGothic16-Regular.ttf");
 
     Array<Enemy> enemies;
+    Array<Hearts> hearts;
     constexpr double InitialEnemySpawnInterval = 2.0;
     double enemySpawnTime = InitialEnemySpawnInterval;
     double enemyAccumulatedTime = 0.0;
@@ -139,7 +136,9 @@ void Main()
             {
                 if (bullet->GetCollider()->intersects(enemy->GetCollider()))
                 {
-                    // spawn heart on 10%
+                    if(RandomInt32() % 20 < 1)
+                        hearts << Hearts(enemy->GetCollider().center, &playerController);
+                    
                     bullet->OnHit();
                     enemy = enemies.erase(enemy);
                     erased = true;
@@ -151,9 +150,11 @@ void Main()
                 ++enemy;
         }
 
+        UTILS::HeartsLoop(&hearts);
+
         // Draw the map
         {
-            
+
             Graphics2D::SetPSTexture(1, stagePaletteTexture);
             const ScopedCustomShader2D shader{paletteSwap};
             Graphics2D::SetPSConstantBuffer(1, stagePalette[map.currentLayer]);
@@ -175,6 +176,11 @@ void Main()
                 Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
                 enemy.Draw();
             }
+        }
+
+        for (auto &heart : hearts)
+        {
+            heart.Draw();
         }
     }
 }

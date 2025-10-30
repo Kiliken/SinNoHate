@@ -74,6 +74,15 @@ bool Enemy::Update()
         break;
     }
     
+
+    {
+        if(enemyPos.x < 20.0)
+            enemyPos.x = 20.0;
+
+        if(enemyPos.x > Scene::Width() - 20.0)
+            enemyPos.x = Scene::Width() - 20.0;
+
+    }
     
     enemyCollider.center = enemyPos;
     if(enemyType == 4)
