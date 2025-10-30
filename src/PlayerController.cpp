@@ -202,7 +202,6 @@ void PlayerController::HealLife()
 void PlayerController::OnDownLayer()
 {
     m_currentLayer++;
-    m_sprite = m_sprites[m_currentLayer];
     if (m_currentLayer >= m_changeCrossHairLayer){
         m_currentCrossHair = m_crossHairEx;
         m_crossHairAnim = Async([this]() {CrossHairAnimation(m_shotCoolTime, Scene::DeltaTime());});
@@ -266,8 +265,8 @@ void PlayerController::Draw(double deltaTime)
     const uint64 t = Time::GetMillisec();
     const double r = abs(m_velocity.y) / abs(m_moveForce);
     const int32 x = (t / (int)(m_animSpeed * 60 / (r == 0 ? 1 : r)) % 4);
-    Print << x;
-    m_sprites[m_currentLayer]((64 * (x == 3 ? 2 : x)),0,64,64).drawAt(m_position);
+    // Print << x;
+    m_sprite((64 * (x == 3 ? 2 : x)), 64 * Min(7, m_currentLayer + 1),64,64).drawAt(m_position);
     m_crossHairRegister.rotated(m_aimAngle).drawAt(m_shotPos);
 
     for (auto& bullet : m_bullets){
