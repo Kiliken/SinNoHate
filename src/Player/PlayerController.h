@@ -10,6 +10,7 @@ class PlayerController{
         const double m_gravity = -0.98;
         const double m_gravityScale = 500.0;
         const double m_shootPosDistance = 50.0;
+        const double m_animSpeed = 1.0;
         Vec2 m_velocity{ 0, 0 };				// 現在の移動速度
         Vec2 m_position{ 0, 0 };				// 現在の座標
         Texture m_crossHair;                    // クロスヘアのおおもとのsprite

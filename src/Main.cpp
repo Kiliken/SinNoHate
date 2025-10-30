@@ -53,9 +53,11 @@ void Main()
         if (!title.gameStarted)
         {
             title.update();
-            title.draw();
+            //title.draw();
             continue;
         }
+
+
         const double deltaTime = Scene::DeltaTime();
         enemyAccumulatedTime += deltaTime;
 
@@ -113,7 +115,7 @@ void Main()
         // shop.UpdateShop(player); // update shop
 
         // when player is inactive
-        if (map.layerSwitched)
+        if (map.layerSwitched || title.startingSeqCounter < 2.35)
         {
             playerController.Update(deltaTime, false);
         }
@@ -167,6 +169,7 @@ void Main()
         shop.DrawShop();
 
         {
+
             // Draw the enemies
             Graphics2D::SetPSTexture(1, enemyPaletteTexture);
             const ScopedCustomShader2D shader{paletteSwap}; // enemy shader palette
@@ -176,6 +179,14 @@ void Main()
                 Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
                 enemy.Draw();
             }
+
+            // Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
+            // enemy.Draw();
+        } 
+
+        if (title.gameStarted && title.startingSeqCounter > 0 && title.startingSeqCounter < 3) {
+            title.update();
+
         }
 
         for (auto &heart : hearts)

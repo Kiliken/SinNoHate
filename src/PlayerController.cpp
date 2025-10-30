@@ -160,7 +160,6 @@ void PlayerController::CrossHairAnimation(double durationSec, double deltaTime)
     double timeFramePerSec = 0.0;
     while (timeFramePerSec <= durationSec){
         const int32 n = (timeFramePerSec / durationSec) * 5;
-        Print << n;
         m_crossHairRegister = m_crossHair((64 * n),0,64,64);
         timeFramePerSec += deltaTime;
         System::Sleep(deltaTime * 1s);
@@ -253,8 +252,9 @@ void PlayerController::Draw(double deltaTime)
 {
     const uint64 t = Time::GetMillisec();
     const double r = abs(m_velocity.y) / abs(m_moveForce);
-    const int32 x = (t / (int)(120 / (r == 0 ? 1 : r)) % 3);
-    m_sprite((64 * x),0,64,64).drawAt(m_position);
+    const int32 x = (t / (int)(m_animSpeed * 60 / (r == 0 ? 1 : r)) % 4);
+    Print << x;
+    m_sprite((64 * (x == 3 ? 2 : x)),0,64,64).drawAt(m_position);
     m_crossHairRegister.rotated(m_aimAngle).drawAt(m_shotPos);
 
     for (auto& bullet : m_bullets){

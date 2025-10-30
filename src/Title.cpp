@@ -17,11 +17,13 @@ Title::~Title()
 // Update function
 void Title::update()
 {
+	const double deltaTime = Scene::DeltaTime();
 	// On left click
 	playButton->update();
 
 	if (playButton->clicked())
 	{
+		startingSequence = true;
 		gameStarted = true;
 	}
 
@@ -30,29 +32,51 @@ void Title::update()
 	// 	// Transition to game scene
 	// 	System::Exit();
 	// }
+
+	if (startingSequence) {
+		startingSeqCounter += deltaTime;
+		if (startingSeqCounter <= 1)  {
+			cloudLPos += deltaTime * Vec2(-350, 0);
+			cloudRPos += deltaTime * Vec2(350, 0);
+		}
+		else if (startingSeqCounter <= 1.65) {
+			fallingPos -= deltaTime * Vec2(0, 450);
+			entryPos -= deltaTime * Vec2(0,450);
+		}
+		else if (startingSeqCounter <= 3.5) { 
+			fallingPos -= deltaTime * Vec2(0,450);
+			skyPos -= deltaTime * Vec2(0, 450);
+			entryPos -= deltaTime * Vec2(0,450);
+		}
+	}
+
+
+	draw();
 }
 
 // Draw function
 void Title::draw()
 {
 	Scene::SetBackground(ColorF{ 0.3, 0.3, 0.3 });
-	if (gameStarted || playButton->hovered()){
-		bg2.draw();
-		title2.draw();
-		
-		cloudl2.draw();
-		p2.draw();
-		cloudr2.draw();
-		start2.draw();
+	if (startingSequence || playButton->hovered()){
+		bg2.drawAt(skyPos);
+		title2.drawAt(fallingPos);
+		cloudl2.drawAt(cloudLPos);
+		cloudr2.drawAt(cloudRPos);
+		start2.drawAt(fallingPos);
+		entry.drawAt(entryPos);
+		if (startingSeqCounter < 2.35) {
+			p2.drawAt(basePos + playerSpriteCallibration);
+		}
+
 	} else {
-		bg1.draw();
-		title1.draw();
-		
-		cloudl1.draw();
-		p1.draw();
-		cloudr1.draw();
-		start1.draw();
-		inferno.draw();
+		bg1.drawAt(basePos);
+		title1.drawAt(basePos);
+		cloudl1.drawAt(basePos);
+		p1.drawAt(basePos + playerSpriteCallibration);
+		cloudr1.drawAt(basePos);
+		start1.drawAt(basePos);
+		inferno.drawAt(basePos);
 	}
 
 
