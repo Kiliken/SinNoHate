@@ -7,6 +7,7 @@ PlayerController::PlayerController(Vec2 firstPosition)
     m_position = m_firstPosition;
     m_sprite = TextureAsset{ U"PlayerSprite" };
     m_crossHair = Texture{ U"Assets/crossHair.png" };
+    m_crossHairRegister = m_crossHair((64 * 0),0,64,64);
     m_collider = Circle{ m_position, 16.0 };
 }
 
@@ -20,6 +21,8 @@ PlayerController::~PlayerController() noexcept
 
 void PlayerController::Aiming()
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     Vec2 cursorPos = Cursor::PosF();
     m_aimDirection = (cursorPos - m_position).normalized();
     m_aimAngle = Math::Atan2(m_aimDirection.x * -1, m_aimDirection.y);
@@ -28,6 +31,7 @@ void PlayerController::Aiming()
 
 void PlayerController::UpdateBullets(double deltaTime)
 {
+    if (m_hasGameOver) return;
     if (m_bullets.isEmpty()) return;
 
     for (auto& bullet : m_bullets){
@@ -42,17 +46,18 @@ void PlayerController::UpdateBullets(double deltaTime)
 
 void PlayerController::UpdateShotCoolTime(double deltaTime)
 {
+    if (m_hasGameOver) return;
     if (m_shotable) return;
 
-    m_shotCoolDown -= deltaTime;
-    if (m_shotCoolDown < 0){
-        m_shotCoolDown = m_shotCoolTime;
+    if (m_crossHairAnim.isReady()){
         m_shotable = true;
     }
 }
 
 void PlayerController::UpdateVelocity(Vec2 velocity)
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     // 入力に応じて左右移動速度を更新する
     if (KeyD.pressed() && KeyA.pressed()){
         m_velocity.x = 0 * m_moveForce;
@@ -108,6 +113,8 @@ void PlayerController::UpdateVelocity(Vec2 velocity)
 
 void PlayerController::Move(Vec2 velocity, double deltaTime)
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     velocity.y *= -1;
     m_position += velocity * deltaTime;
     m_position.x = Clamp(m_position.x, (double)Map::tileSize, (double)(Scene::Width() - Map::tileSize));
@@ -116,6 +123,8 @@ void PlayerController::Move(Vec2 velocity, double deltaTime)
 
 void PlayerController::Jump()
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     if (KeySpace.down()){
         m_velocity.y = m_jumpForce;
     }
@@ -123,6 +132,8 @@ void PlayerController::Jump()
 
 void PlayerController::Shot()
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     if (!m_shotable) return;
     if (MouseL.down() || KeySpace.down()){
         // すでに発射済みで非アクティブ化している球がある場合それを再利用
@@ -131,6 +142,7 @@ void PlayerController::Shot()
                 if (!bullet->IsActive()){
                     bullet->Init(m_shotPos, m_aimDirection, m_bulletRadius);
                     m_shotable = false;
+                    m_crossHairAnim = Async([this]() {CrossHairAnimation(m_shotCoolTime, Scene::DeltaTime());});
                     return;
                 }
             }
@@ -138,12 +150,28 @@ void PlayerController::Shot()
         // ない場合、新たに生成
         BulletBase* bullet = new BulletBase{ m_shotPos, m_aimDirection, m_bulletRadius };
         m_shotable = false;
+        m_crossHairAnim = Async([this]() {CrossHairAnimation(m_shotCoolTime, Scene::DeltaTime());});
         m_bullets << bullet;
     }
 }
 
+void PlayerController::CrossHairAnimation(double durationSec, double deltaTime)
+{
+    double timeFramePerSec = 0.0;
+    while (timeFramePerSec <= durationSec){
+        const int32 n = (timeFramePerSec / durationSec) * 5;
+        Print << n;
+        m_crossHairRegister = m_crossHair((64 * n),0,64,64);
+        timeFramePerSec += deltaTime;
+        System::Sleep(deltaTime * 1s);
+    }
+    m_crossHairRegister = m_crossHair((64 * 0),0,64,64);
+}
+
 void PlayerController::UpdateVelocityYByGravity(double deltaTime)
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     // 初期位置まで行けば速度とY座標をリセット
     if (m_position.y > m_firstPosition.y){
         m_velocity.y = 0;
@@ -156,28 +184,41 @@ void PlayerController::UpdateVelocityYByGravity(double deltaTime)
 
 void PlayerController::OnDamage()
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     UpdateLife(-1);
+    if (m_life <= 0){
+        m_hasGameOver = true;
+    }
     //Print << U"OUCH";
 }
 
 void PlayerController::HealLife()
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     UpdateLife(1);
 }
 
 void PlayerController::UpGrade_IncreaseMaxLife(int addValue)
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     m_maxLife += addValue;
     m_life += addValue;
 }
 
 void PlayerController::UpGrade_ExpansionBullet(int expansValue)
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     m_bulletRadius += expansValue;
 }
 
 void PlayerController::UpGrade_DecreaseAttackSpan(double subtractValue)
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     if (subtractValue > m_shotCoolTime){
         Print << U"Attack Span：Exceeds the current value";
         return;
@@ -187,12 +228,16 @@ void PlayerController::UpGrade_DecreaseAttackSpan(double subtractValue)
 
 void PlayerController::UpdateLife(int addValue)
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     m_life += addValue;
     m_life = Clamp(m_life, 0, m_maxLife);
 }
 
 void PlayerController::Update(double deltaTime, bool isActive)
 {
+    if (m_hasGameClear) return;
+    if (m_hasGameOver) return;
     if(!isActive) return;
 
     Aiming();
@@ -206,9 +251,11 @@ void PlayerController::Update(double deltaTime, bool isActive)
 
 void PlayerController::Draw(double deltaTime)
 {
-    // m_collider.drawFrame(1.0, Palette::Red);
-    m_sprite.drawAt( m_position );
-    m_crossHair.rotated(m_aimAngle).drawAt(m_shotPos);
+    const uint64 t = Time::GetMillisec();
+    const double r = abs(m_velocity.y) / abs(m_moveForce);
+    const int32 x = (t / (int)(120 / (r == 0 ? 1 : r)) % 3);
+    m_sprite((64 * x),0,64,64).drawAt(m_position);
+    m_crossHairRegister.rotated(m_aimAngle).drawAt(m_shotPos);
 
     for (auto& bullet : m_bullets){
         bullet->Draw();
@@ -219,6 +266,12 @@ void PlayerController::OnFinalLayer()
 {
     m_inFinalLayer = true;
 }
+
+void PlayerController::OnGameClear()
+{
+    m_hasGameClear = true;
+}
+
 Circle *PlayerController::Collider()
 {
     return &m_collider;

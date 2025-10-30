@@ -5,10 +5,12 @@
 class BulletBase{
     protected:
         const double m_moveSpeed = 500.0;	// 移動速度
-        Circle m_sprite;		// テクスチャ
+        Texture m_sprite;		// テクスチャ
+        Circle m_collider;      // 当たり判定
         Vec2 m_velocity{ 0, 0 };
 
         Color m_color;
+        int m_radius;
         Vec2 m_moveDirection;
         Vec2 m_position;
 
@@ -29,5 +31,5 @@ class BulletBase{
 
         void OnHit();
 
-        Circle* GetCollider() { return &m_sprite; }
+        Circle* GetCollider() { return &m_collider; }
 };

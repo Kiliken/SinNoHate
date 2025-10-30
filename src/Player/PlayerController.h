@@ -12,22 +12,26 @@ class PlayerController{
         const double m_shootPosDistance = 50.0;
         Vec2 m_velocity{ 0, 0 };				// 現在の移動速度
         Vec2 m_position{ 0, 0 };				// 現在の座標
-        Texture m_crossHair;
+        Texture m_crossHair;                    // クロスヘアのおおもとのsprite
         Vec2 m_shotPos{ 0, 0 };
         Vec2 m_aimDirection{ 0, 0 };
         double m_aimAngle = 0;
 
         Texture m_sprite;				// プレイヤーの見た目のテクスチャ
+        TextureRegion m_crossHairRegister;    // クロスヘアの見た目のテクスチャ
         Circle m_collider;
         Vec2 m_firstPosition;			// 初期位置
         int m_maxLife = 3;				// 最大ライフ
         int m_life = m_maxLife;					// 現在のライフ
         int m_bulletRadius = 10;        // 弾の大きさ
         double m_shotCoolTime = 0.5;			// ショットのクールダウン時間：秒
-        double m_shotCoolDown = m_shotCoolTime;				// ショットのクールタイム
-        bool m_inFinalLayer = false;
+        bool m_inFinalLayer = false;        // 最終layerか
+        bool m_hasGameOver = false;             // ゲームオーバーしているか
+        bool m_hasGameClear = false;        // ゲームクリアしているか
         bool m_shotable = true;
         Array<BulletBase*> m_bullets;
+
+        AsyncTask<void> m_crossHairAnim;
 
         /// @brief マウスカーソルの位置に応じて発射方向を管理
         void Aiming();
@@ -54,6 +58,10 @@ class PlayerController{
 
         /// @brief 入力があれば弾を打つ
         void Shot();
+
+        /// @brief クロスヘアのspriteアニメーション
+        /// @param durationSec アニメーション時間：秒
+        void CrossHairAnimation(double durationSec, double deltaTime);
 
         /// @brief Y座標が初期位置より上であれば、重力による速度の更新を行う
         /// @param deltaTime 微小時間
@@ -102,7 +110,11 @@ class PlayerController{
         /// @param deltaTime 微小時間
         void Draw(double deltaTime);
 
+        /// @brief 最終layerに到達
         void OnFinalLayer();
+
+        /// @brief ゲームクリア
+        void OnGameClear();
 
         /// @brief 当たり判定を取得
         Circle* Collider();
