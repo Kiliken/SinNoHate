@@ -36,7 +36,7 @@ private:
 	const s3d::Texture cloudl1{U"Assets/TitlescreenAssets/cloudleft1.png"};
 	const s3d::Texture cloudl2{U"Assets/TitlescreenAssets/cloudleft2.png"};
 	const s3d::Texture inferno{U"Assets/TitlescreenAssets/inferno.png"};
-	const s3d::Texture entry{U"Assets/TitlescreenAssets/entry.png"};
+	const s3d::Texture entry{U"Assets/TitlescreenAssets/entrys.png"};
 
 
 	Vec2 basePos = Vec2(Scene::Width()/2, Scene::Height()/2);

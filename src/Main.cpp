@@ -48,6 +48,8 @@ void Main()
     PlayerController playerController({256.0f, 240.0f}); // Create player controller instance
     Title title;
 
+    Boss boss(&playerController);
+
     while (System::Update())
     {
         if (!title.gameStarted)
@@ -154,6 +156,8 @@ void Main()
 
         UTILS::HeartsLoop(&hearts);
 
+        boss.Update();
+
         // Draw the map
         {
 
@@ -183,6 +187,8 @@ void Main()
             // Graphics2D::SetPSConstantBuffer(1, enemyPalette[enemy.GetEnemyType()]);
             // enemy.Draw();
         } 
+
+        boss.Draw();
 
         if (title.gameStarted && title.startingSeqCounter > 0 && title.startingSeqCounter < 3) {
             title.update();
