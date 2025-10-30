@@ -20,19 +20,7 @@ class PlayerController{
         Vec2 m_shotPos{ 0, 0 };
         Vec2 m_aimDirection{ 0, 0 };
         double m_aimAngle = 0;
-
-        // プレイヤーの見た目テクスチャ達
-        const Texture m_sprites[8]{
-            Texture{ U"Assets/playerSprite_01.png" },
-            Texture{ U"Assets/playerSprite_02.png" },
-            Texture{ U"Assets/playerSprite_03.png" },
-            Texture{ U"Assets/playerSprite_04.png" },
-            Texture{ U"Assets/playerSprite_05.png" },
-            Texture{ U"Assets/playerSprite_06.png" },
-            Texture{ U"Assets/playerSprite_07.png" },
-            Texture{ U"Assets/playerSprite_08.png" },
-        };          
-        Texture m_sprite;				// プレイヤーの現在の見た目のテクスチャ
+        Texture m_sprite = TextureAsset{ U"PlayerSprite" };				// プレイヤーの現在の見た目のテクスチャ
         TextureRegion m_crossHairRegister;    // クロスヘアの見た目のテクスチャ
         Circle m_collider;
         Vec2 m_firstPosition;			// 初期位置
