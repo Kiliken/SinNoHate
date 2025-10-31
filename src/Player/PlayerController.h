@@ -34,6 +34,7 @@ class PlayerController{
         bool m_hasGameClear = false;        // ゲームクリアしているか
         bool m_shotable = true;
         Array<BulletBase*> m_bullets;
+        Effect* particles;
 
         AsyncTask<void> m_crossHairAnim;
 
@@ -78,7 +79,7 @@ class PlayerController{
     public:
         /// @brief プレイヤーの移動管理クラス
         /// @param firstPosition 初期位置
-        PlayerController(Vec2 firstPosition);
+        PlayerController(Vec2 firstPosition,Effect* ef);
 
         ~PlayerController() noexcept ;
 

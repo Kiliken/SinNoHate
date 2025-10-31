@@ -1,7 +1,8 @@
 #include "Player/PlayerController.h"
 #include "MapManager.h"
+#include "utils.h"
 
-PlayerController::PlayerController(Vec2 firstPosition)
+PlayerController::PlayerController(Vec2 firstPosition,Effect* ef)
 {
     m_currentLayer = 0;
     m_firstPosition = firstPosition;
@@ -9,6 +10,7 @@ PlayerController::PlayerController(Vec2 firstPosition)
     m_currentCrossHair = m_crossHair;
     m_crossHairRegister = m_currentCrossHair((64 * 0),0,64,64);
     m_collider = Circle{ m_position, 16.0 };
+    particles = ef;
 }
 
 PlayerController::~PlayerController() noexcept
@@ -196,6 +198,7 @@ void PlayerController::HealLife()
 {
     if (m_hasGameClear) return;
     if (m_hasGameOver) return;
+    particles->add<RingEffect>(m_position);
     UpdateLife(1);
 }
 
