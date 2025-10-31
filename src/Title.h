@@ -37,6 +37,8 @@ private:
 	const s3d::Texture cloudl2{Resource(U"Assets/TitlescreenAssets/cloudleft2.png")};
 	const s3d::Texture inferno{Resource(U"Assets/TitlescreenAssets/inferno.png")};
 	const s3d::Texture entry{Resource(U"Assets/TitlescreenAssets/entrys.png")};
+	const s3d::Texture finalGlow{Resource(U"Assets/TitlescreenAssets/FinalGlow.png")};
+	const s3d::Texture finalFloor{Resource(U"Assets/TitlescreenAssets/FinalFloor.png")};
 
 
 	Vec2 basePos = Vec2(Scene::Width()/2, Scene::Height()/2);
