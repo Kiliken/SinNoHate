@@ -127,5 +127,44 @@ Resource(engine/soundfont/GMGSx.sf2.zstdcmp)
 //
 //////////////////////////////////////////////////////
 
+// Game
+Resource(Assets/EnemyPalette.png)
+Resource(Assets/StagePalette.png)
+Resource(Assets/MapTexture.png)
+Resource(Assets/TrapTexture.png)
+Resource(Assets/EnemySprite.png)
+Resource(Assets/PlayerSprite.png)
+Resource(Assets/heartSprite.png)
+Resource(Assets/bossSprite.png)
+Resource(Assets/HeartTexture.png)
+Resource(Assets/crossHair.png)
+Resource(Assets/crossHair_ex.png)
+Resource(Assets/shotSprite.png)
+Resource(Assets/shotSprite_ex.png)
+
+// Shader
+Resource(Assets/shaders/colorSwap.hlsl)
+
+// Fonts
+Resource(Assets/DotGothic16-Regular.ttf)
+
+// Audio
 Resource(Assets/sound/lisztInferno.mp3)
 Resource(Assets/sound/lacrimosa.mp3)
+
+// Title
+Resource(Assets/TitlescreenAssets/entrys.png)
+Resource(Assets/TitlescreenAssets/background1.png)
+Resource(Assets/TitlescreenAssets/background2.png)
+Resource(Assets/TitlescreenAssets/start1.png)
+Resource(Assets/TitlescreenAssets/start2.png)
+Resource(Assets/TitlescreenAssets/player1.png)
+Resource(Assets/TitlescreenAssets/player2.png)
+Resource(Assets/TitlescreenAssets/title1.png)
+Resource(Assets/TitlescreenAssets/title2.png)
+Resource(Assets/TitlescreenAssets/cloudright1.png)
+Resource(Assets/TitlescreenAssets/cloudright2.png)
+Resource(Assets/TitlescreenAssets/cloudleft1.png)
+Resource(Assets/TitlescreenAssets/cloudleft2.png)
+Resource(Assets/TitlescreenAssets/inferno.png)
+

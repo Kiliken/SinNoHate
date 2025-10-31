@@ -42,7 +42,7 @@ struct Spark : IEffect
             particle.type = type;
             particle.color = ((RandomUint8() % 5) + 3);
 
-            enemyPalette = Texture{U"Assets/EnemyPalette.png"};
+            enemyPalette = Texture{Resource(U"Assets/EnemyPalette.png")};
         }
     }
 

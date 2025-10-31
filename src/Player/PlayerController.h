@@ -14,8 +14,8 @@ class PlayerController{
         const int m_changeCrossHairLayer = 3;   // クロスヘアが変わるレイヤー番号
         Vec2 m_velocity{ 0, 0 };				// 現在の移動速度
         Vec2 m_position{ 0, 0 };				// 現在の座標
-        Texture m_crossHair = Texture{ U"Assets/crossHair.png" };                    // 通常クロスヘアのおおもとのsprite
-        Texture m_crossHairEx = Texture{ U"Assets/crossHair_ex.png" };                    // 通常クロスヘアのおおもとのsprite
+        Texture m_crossHair = Texture{ Resource(U"Assets/crossHair.png") };                    // 通常クロスヘアのおおもとのsprite
+        Texture m_crossHairEx = Texture{ Resource(U"Assets/crossHair_ex.png") };                    // 通常クロスヘアのおおもとのsprite
         Texture m_currentCrossHair;             // 現在のクロスヘアのsprite
         Vec2 m_shotPos{ 0, 0 };
         Vec2 m_aimDirection{ 0, 0 };
