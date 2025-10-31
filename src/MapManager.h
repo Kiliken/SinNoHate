@@ -85,7 +85,7 @@ private:
     float bgCurrentScrollSpeed = 60.0f;
     double scrollOffset = 0.0; // current scroll offset
 
-    static constexpr float layerTime = 3.0f; // time per layer in seconds (excluding final layer)
+    static constexpr float layerTime = 30.0f; // time per layer in seconds (excluding final layer)
     float layerTimer = 0.0f;
 
     Array<Grid<int32>> map; // map with layers

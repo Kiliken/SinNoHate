@@ -59,7 +59,7 @@ void Main()
 
     Map map;                                             // Create map instance
     Shop shop;                                           // Create shop instance
-    PlayerController playerController({256.0f, 240.0f}); // Create player controller instance
+    PlayerController playerController({256.0f, 240.0f}, &effect); // Create player controller instance
     Title title;
     UI playerUI;
 
@@ -205,6 +205,7 @@ void Main()
 
         if (map.currentLayer == map.layerCount - 1 && !boss.GetStatus() && !gameClear){
             gameClear = true;
+            playerController.OnGameClear();
             currentScore += bossScore;
             effect.add<Spark>(boss.GetCollider().center,boss.GetCurretType());
             map.MapGameClear();
