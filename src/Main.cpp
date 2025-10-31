@@ -130,7 +130,7 @@ void Main()
         {
             enemies.clear();
             // up to final boss
-            if (map.currentLayer <= map.layerCount)
+            if (map.currentLayer < map.layerCount && !map.allLayersCleared)
             {
                 // wait for player to finish shopping
                 if (!shop.shopActive)
@@ -226,7 +226,7 @@ void Main()
             playerController.OnGameClear();
             currentScore += bossScore;
             effect.add<Spark>(boss.GetCollider().center,boss.GetCurretType());
-            map.MapGameClear();
+            map.EndLayer();
         }
 
         // Draw the map

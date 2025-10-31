@@ -62,5 +62,5 @@ private:
 
     int lifeIncrease = 1;
     int bulletExpansion = 5;
-    double attackSpeedDecrease = 0.1;
+    double attackSpeedDecrease = 0.05;
 };

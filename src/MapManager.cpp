@@ -99,6 +99,7 @@ void Map::EndLayer()
     }
     else{
         allLayersCleared = true;
+        Console << U"Boss defeated " << currentLayer;
     }
     layerSwitched = true;
 }
@@ -157,7 +158,7 @@ void Map::CreateTraps()
         if(positionOccupied) continue; // skip this iteration if occupied
 
         traps.emplace_back(0, Vec2(x, y), trapDamageValues[currentLayer]);
-        Console << U"Trap created at (" << x << U"," << y << U")";
+        //Console << U"Trap created at (" << x << U"," << y << U")";
     }
 }
 
@@ -196,7 +197,7 @@ void Map::UpdateTraps(double deltaTime, PlayerController& player, Array<Enemy>* 
         // check collision with player and bullets プレイヤーとの当たり判定を確認
         if(CheckTrapCollisions(trap, player) && !trap.activated) {
             trap.activated = true;
-            Console << U"Trap at (" << trap.position.x << U"," << trap.position.y << U") activated!";
+            //Console << U"Trap at (" << trap.position.x << U"," << trap.position.y << U") activated!";
         }
         else if(trap.activated) {
             // after activation, check explosion collision
@@ -204,14 +205,14 @@ void Map::UpdateTraps(double deltaTime, PlayerController& player, Array<Enemy>* 
                 //player.currentHP -= trap.damage; // apply damage again
                 player.OnDamage(); // apply damage through method
                 trap.damagedPlayer = true;
-                Console << U"Player hit by trap explosion! Current HP: " << player.Life();
+                //Console << U"Player hit by trap explosion! Current HP: " << player.Life();
             }
 
             // CHECK ENEMY COLLISION HERE
             for (auto enemy = enemies->begin(); enemy != enemies->end();){
                 if(enemy->GetCollider().intersects(trap.explosionCol)){
                     enemy = enemies->erase(enemy);
-                    Console << U"Enemy BOOM!";
+                    //Console << U"Enemy BOOM!";
                     continue;
                 }
 
@@ -248,7 +249,7 @@ bool Map::CheckTrapCollisions(Trap& trap, PlayerController& player)
     
     for(const auto& bullet : player.GetBullets()) {
         if(bullet->GetCollider()->intersects(trap.collider)) {
-            Console << U"Bullet collided with trap at (" << trap.position.x << U"," << trap.position.y << U")";
+            //Console << U"Bullet collided with trap at (" << trap.position.x << U"," << trap.position.y << U")";
             // destroy bullet here
             bullet->OnHit();
 
@@ -268,7 +269,7 @@ void Map::DestroyTrap(Trap& trap)
         return t.position == trap.position;
     });
     
-    Console << U"Trap at (" << trap.position.x << U"," << trap.position.y << U") destroyed.";
+    //Console << U"Trap at (" << trap.position.x << U"," << trap.position.y << U") destroyed.";
 }
 
 
