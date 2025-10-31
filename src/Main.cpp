@@ -51,6 +51,8 @@ void Main()
 
     Boss boss(&playerController);
 
+    const Audio enemySound{ GMInstrument::StringEnsemble1, PianoKey::C1, 0.3s };
+
     while (System::Update())
     {
         if (!title.gameStarted)
@@ -142,9 +144,11 @@ void Main()
                 {
                     if (RandomInt32() % 20 < 1)
                         hearts << Hearts(enemy->GetCollider().center, &playerController);
-
+                    
+                    enemySound.stop();
                     bullet->OnHit();
                     enemy = enemies.erase(enemy);
+                    enemySound.play();
                     erased = true;
                     break;
                 }
@@ -182,7 +186,6 @@ void Main()
             map.Draw();
         }
 
-        // RESET SHADER HERE
         playerController.Draw(deltaTime);
        
 

@@ -98,7 +98,7 @@ bool Boss::Update()
     {
         //player->OnDamage();
         damageCooldown = 10.0;
-        Print << U"SHADOW HIT";
+        //Print << U"SHADOW HIT";
     }
 
     if (switchFase > 0){
@@ -123,6 +123,14 @@ bool Boss::Update()
         pos.y = Scene::Height();
         facing = -1.5;
     }
+
+    if (hitTime <= hitDuration)
+    {
+        hitTime += deltaTime;
+
+        double t = Clamp(hitTime / hitDuration, 0.0, 1.0);
+        hitColor = ColorF(Palette::Gray).lerp(ColorF(Palette::White), t);
+    }
         
 
     return false;
@@ -132,7 +140,7 @@ void Boss::Draw()
 {
     const uint64 t = Time::GetMillisec();
 	const int32 x = (t / 120 % 5);
-    sprite((128 * x),0,128,128).resized(256).drawAt(pos); // add color
+    sprite((128 * x),0,128,128).resized(256).drawAt(pos, hitColor); // add color
 
     if(curretType == 4){
         sprite((128 * x),0,128,128).resized(256).drawAt(lustShadowPos, ColorF(0.7, 0.7,0.7));
@@ -149,6 +157,7 @@ bool Boss::GetStatus() { return isAlive; }
 
 void Boss::GetDamage() {
     hp--;
+    hitTime = 0.0;
 
     if(hp < 0)
         isAlive = false; //GAME WON!

@@ -18,7 +18,10 @@ private:
     double facing = -1.0;
     double switchFase = 5.0;
     bool isAlive = true;
-    
+
+    Color hitColor = {Palette::White};
+    double hitDuration = 0.25;
+    double hitTime = hitDuration;
 
     Vec2 lustShadowPos;
     Circle lustShadowCollider;
