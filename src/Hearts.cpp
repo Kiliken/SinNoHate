@@ -15,6 +15,7 @@ bool Hearts::Update(){
     collider.center.y -= deltaTime * 100.0;
 
     if(playerCollider->intersects(collider)){
+        
         player->HealLife();
         return true;
     }
