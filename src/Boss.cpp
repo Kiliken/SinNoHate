@@ -10,10 +10,10 @@ Boss::Boss(PlayerController* p)
     player = p;
     playerCollider = p->Collider();
 
-    collider.setR(20.0);
+    collider.setR(40.0);
 
     lustShadowPos = pos;
-    lustShadowCollider.setR(20.0);
+    lustShadowCollider.setR(40.0);
     
         
 }
@@ -145,7 +145,8 @@ void Boss::Draw()
     if(curretType == 4){
         sprite((128 * x),0,128,128).resized(256).drawAt(lustShadowPos, ColorF(0.7, 0.7,0.7));
     }
-    //enemyCollider.draw();
+
+    //collider.draw();
 
 }
 
@@ -161,4 +162,23 @@ void Boss::GetDamage() {
 
     if(hp < 0)
         isAlive = false; //GAME WON!
+}
+
+void Boss::Reset(){
+    pos = {Scene::Width()/2, Scene::Height() - 50};
+    speed = 0;
+    lustShadowPos = pos;
+    curretType = 0;
+    hp = 50;
+
+    damageCooldown = 0;
+    facing = -1.0;
+    switchFase = 5.0;
+    isAlive = true;
+
+    hitColor = {Palette::White};
+    hitDuration = 0.25;
+    hitTime = hitDuration;
+
+    
 }
