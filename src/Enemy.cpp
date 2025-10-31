@@ -43,7 +43,8 @@ bool Enemy::Update()
     {
     case 0:
         //enemyPos.y -= (deltaTime * 100);
-        enemyPos +=  direction * deltaTime * (direction.y < 0 ? 100.0 : 50.0);
+        if(enemyPos.distanceFrom(playerCollider->center) > 30.0)
+            enemyPos +=  direction * deltaTime * (direction.y < 0 ? 100.0 : 50.0);
         break;
     case 1:
         enemyPos.y -= (deltaTime * 100);
@@ -70,7 +71,8 @@ bool Enemy::Update()
         break;
     case 6:
         //enemyPos.y -= (deltaTime * 100);
-        enemyPos +=  direction * deltaTime * (direction.y < 0 ? 200.0 : 150.0);
+        if(enemyPos.distanceFrom(playerCollider->center) > 30.0)
+            enemyPos +=  direction * deltaTime * (direction.y < 0 ? 200.0 : 150.0);
         break;
     }
     

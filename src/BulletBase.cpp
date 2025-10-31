@@ -17,9 +17,9 @@ BulletBase::BulletBase(Vec2 firstPosition, Vec2 firstDirection, int radius, int 
     m_position = firstPosition;
     m_radius = radius;
     if (layerIndex < m_swapSpriteLayerID)
-        m_sprite = Texture{ U"Assets/shotSprite.png" };
+        m_sprite = Texture{ TextureAsset{U"ShotSprite"} };
     else
-        m_sprite = Texture{ U"Assets/shotSprite_ex.png" };
+        m_sprite = Texture{ TextureAsset{U"ShotSpriteEx"} };
     m_collider = Circle{ m_position, m_radius };
     m_moveDirection = firstDirection;
     m_color = Palette::Red;

@@ -1,9 +1,5 @@
 ﻿#include "utils.h"
 
-struct PaletteSettings
-{
-    unsigned int currentPalette;
-};
 
 void Main()
 {
@@ -12,7 +8,7 @@ void Main()
     Window::SetTitle(U"罪の果て");
     Window::Resize(512, 480);
 
-    const PixelShader paletteSwap = HLSL{U"Assets/shaders/colorSwap.hlsl", U"PS_PaletteSwap"};
+    const PixelShader paletteSwap = HLSL{Resource(U"Assets/shaders/colorSwap.hlsl"), U"PS_PaletteSwap"};
     const ScopedRenderStates2D sampler{SamplerState::ClampNearest};
 
     ConstantBuffer<PaletteSettings> enemyPalette[7];
@@ -25,19 +21,31 @@ void Main()
     }
     stagePalette[7]->currentPalette = static_cast<unsigned int>(7);
 
-    const Texture enemyPaletteTexture(U"Assets/EnemyPalette.png");
-    const Texture stagePaletteTexture(U"Assets/StagePalette.png");
+    const Texture enemyPaletteTexture(Resource(U"Assets/EnemyPalette.png"));
+    const Texture stagePaletteTexture(Resource(U"Assets/StagePalette.png"));
+
+    Effect effect;
 
     // Load textures and sprites
     // Texture mapTexture(U"map.png");
-    TextureAsset::Register(U"MapTexture", U"Assets/MapTexture.png");
-    TextureAsset::Register(U"EnemySprite", U"Assets/EnemySprite.png");
-    TextureAsset::Register(U"PlayerSprite", U"Assets/PlayerSprite.png");
-    TextureAsset::Register(U"HeartSprite", U"Assets/heartSprite.png");
-    TextureAsset::Register(U"BossSprite", U"Assets/bossSprite.png");
-    TextureAsset::Register(U"HeartTexture", U"Assets/HeartTexture.png");    // UI
+    TextureAsset::Register(U"MapTexture", Resource(U"Assets/MapTexture.png"));
+    TextureAsset::Register(U"TrapTexture", Resource(U"Assets/TrapTexture.png"));
+    TextureAsset::Register(U"EnemySprite", Resource(U"Assets/EnemySprite.png"));
+    TextureAsset::Register(U"PlayerSprite", Resource(U"Assets/PlayerSprite.png"));
+    TextureAsset::Register(U"HeartSprite", Resource(U"Assets/heartSprite.png"));
+    TextureAsset::Register(U"BossSprite", Resource(U"Assets/bossSprite.png"));
+    TextureAsset::Register(U"HeartTexture", Resource(U"Assets/HeartTexture.png"));    // UI
+    TextureAsset::Register(U"ShotSprite",Resource(U"Assets/shotSprite.png"));
+    TextureAsset::Register(U"ShotSpriteEx",Resource(U"Assets/shotSprite_ex.png"));
+    
+    // Load Audio
+    AudioAsset::Register(U"BGM", Audio::Stream, Resource(U"Assets/sound/lisztInferno.mp3"));
+    AudioAsset::Register(U"TitleBGM", Audio::Stream, Resource(U"Assets/sound/lacrimosa.mp3"));
+    
+    
+    
     // Load font
-    FontAsset::Register(U"Text", FontMethod::MSDF, 48, U"Assets/DotGothic16-Regular.ttf");
+    FontAsset::Register(U"Text", FontMethod::MSDF, 48, Resource(U"Assets/DotGothic16-Regular.ttf"));
 
     Array<Enemy> enemies;
     Array<Hearts> hearts;
@@ -60,16 +68,28 @@ void Main()
 
     Boss boss(&playerController);
 
-    const Audio enemySound{ GMInstrument::StringEnsemble1, PianoKey::C1, 0.3s };
+    const Audio enemySound{GMInstrument::StringEnsemble1, PianoKey::C1, 0.3s};
+    const Audio bgMusic{ AudioAsset{U"BGM"} };
+    const Audio titleMusic{ AudioAsset{U"TitleBGM"} };
 
+    
     while (System::Update())
     {
         if (!title.gameStarted)
         {
+            if(!titleMusic.isPlaying())
+                titleMusic.play();
+
             title.update();
             // title.draw();
             continue;
         }
+
+        if(titleMusic.isPlaying())
+                titleMusic.stop();
+
+        if(!bgMusic.isPlaying())
+            bgMusic.play();
 
         const double deltaTime = Scene::DeltaTime();
         enemyAccumulatedTime += deltaTime;
@@ -168,9 +188,10 @@ void Main()
                 {
                     if (RandomInt32() % 20 < 1)
                         hearts << Hearts(enemy->GetCollider().center, &playerController);
-                    
+
                     enemySound.stop();
                     bullet->OnHit();
+                    effect.add<Spark>(enemy->GetCollider().center,enemy->GetEnemyType());
                     enemy = enemies.erase(enemy);
                     enemySound.play();
                     erased = true;
@@ -187,7 +208,7 @@ void Main()
 
         if (map.currentLayer == map.layerCount - 1 && boss.GetStatus() && !map.layerSwitched)
         {
-            
+
             boss.Update();
             for (const auto &bullet : playerController.GetBullets())
             {
@@ -198,7 +219,6 @@ void Main()
                     break;
                 }
             }
-            
         }
 
         // Draw the map
@@ -223,7 +243,6 @@ void Main()
         levelTitle.DrawLevelTitle();
         
         playerController.Draw(deltaTime);
-       
 
         {
 
@@ -241,7 +260,6 @@ void Main()
             {
                 Graphics2D::SetPSConstantBuffer(1, enemyPalette[boss.GetCurretType()]);
                 boss.Draw();
-                
             }
         }
 
@@ -249,6 +267,8 @@ void Main()
         {
             heart.Draw();
         }
+
+        effect.update();
 
         shop.DrawShop();
 
@@ -260,7 +280,5 @@ void Main()
         {
             title.update();
         }
-
-        
     }
 }

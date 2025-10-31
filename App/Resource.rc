@@ -127,22 +127,44 @@ Resource(engine/soundfont/GMGSx.sf2.zstdcmp)
 //
 //////////////////////////////////////////////////////
 
+// Game
+Resource(Assets/EnemyPalette.png)
+Resource(Assets/StagePalette.png)
+Resource(Assets/MapTexture.png)
+Resource(Assets/TrapTexture.png)
+Resource(Assets/EnemySprite.png)
+Resource(Assets/PlayerSprite.png)
+Resource(Assets/heartSprite.png)
+Resource(Assets/bossSprite.png)
+Resource(Assets/HeartTexture.png)
+Resource(Assets/crossHair.png)
+Resource(Assets/crossHair_ex.png)
+Resource(Assets/shotSprite.png)
+Resource(Assets/shotSprite_ex.png)
 
+// Shader
+Resource(Assets/shaders/colorSwap.hlsl)
 
-/* examples 
+// Fonts
+Resource(Assets/DotGothic16-Regular.ttf)
 
-	//
-	// Define your resource path inside `Resource()` macro.
-	// No double quotation marks and white spaces may appear.
-	//
-	Resource(example/siv3d-kun.png)		// ok
-	Resource(example/windmill.png)		// ok
-	Resource(assets/a b c.txt)			// error: contains white spaces
-	Resource("example/windmill.png")	// error: contains double quotation marks
+// Audio
+Resource(Assets/sound/lisztInferno.mp3)
+Resource(Assets/sound/lacrimosa.mp3)
 
-	//
-	// If your file contains a white space, define the identifier without using Resource() macro.
-	//
-	MYIDENTIFIER_1 FILE "assets/a b c.txt"
-	MYIDENTIFIER_2 FILE "level 1/map.dat"
-*/
+// Title
+Resource(Assets/TitlescreenAssets/entrys.png)
+Resource(Assets/TitlescreenAssets/background1.png)
+Resource(Assets/TitlescreenAssets/background2.png)
+Resource(Assets/TitlescreenAssets/start1.png)
+Resource(Assets/TitlescreenAssets/start2.png)
+Resource(Assets/TitlescreenAssets/player1.png)
+Resource(Assets/TitlescreenAssets/player2.png)
+Resource(Assets/TitlescreenAssets/title1.png)
+Resource(Assets/TitlescreenAssets/title2.png)
+Resource(Assets/TitlescreenAssets/cloudright1.png)
+Resource(Assets/TitlescreenAssets/cloudright2.png)
+Resource(Assets/TitlescreenAssets/cloudleft1.png)
+Resource(Assets/TitlescreenAssets/cloudleft2.png)
+Resource(Assets/TitlescreenAssets/inferno.png)
+

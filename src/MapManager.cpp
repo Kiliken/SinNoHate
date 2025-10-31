@@ -2,6 +2,9 @@
 
 Map::Map()
 {
+    mapTexture = TextureAsset(U"MapTexture");
+    trapTexture = TextureAsset(U"TrapTexture");
+    
     GenerateMap();
     bgCurrentScrollSpeed = bgScrollSpeed;
 }
@@ -9,8 +12,6 @@ Map::Map()
 
 void Map::GenerateMap()
 {
-    mapTexture = TextureAsset(U"MapTexture");
-
     map.resize(layerCount);
     for(int layerIndex = 0; layerIndex < layerCount; ++layerIndex){
         auto& layer = map[layerIndex];
@@ -275,12 +276,18 @@ void Map::DestroyTrap(Trap& trap)
 void Map::DrawTraps() {
     for (const auto& trap : traps) {
         Vec2 pos(trap.position.x, trap.position.y);
-        if(trap.activated)
-            // draw explosion
-            trap.explosionCol.draw(Palette::Orange);
-        
-        //trap.collider.draw(Palette::Red); // draw collider for debugging
-        mapTexture(SpriteIndex::trapActive * tileSize, 0, tileSize, tileSize).draw(pos); // assuming trap sprite is at index 10
+        if(trap.activated){
+             // draw explosion
+            //trap.explosionCol.draw(Palette::Orange);
+
+            const uint64 t = Time::GetMillisec();
+	        const int32 x = (t / 60 % 3);
+            trapTexture((64 * x),0,64,64).drawAt(pos + Vec2(16, 16)); // add color
+        }
+        else{
+            //trap.collider.draw(Palette::Red); // draw collider for debugging
+            mapTexture(SpriteIndex::trapActive * tileSize, 0, tileSize, tileSize).draw(pos); // assuming trap sprite is at index 10
+        }
     }
 }
 
