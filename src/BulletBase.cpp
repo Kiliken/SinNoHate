@@ -11,7 +11,7 @@ bool BulletBase::IsActive()
     return m_isActive;
 }
 
-BulletBase::BulletBase(Vec2 firstPosition, Vec2 firstDirection, int radius, int layerIndex)
+BulletBase::BulletBase(Vec2 firstPosition, Vec2 firstDirection, double radius, int layerIndex)
 {
     m_isActive = true;
     m_position = firstPosition;

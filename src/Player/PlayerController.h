@@ -27,7 +27,7 @@ class PlayerController{
         int m_currentLayer;
         int m_maxLife = 3;				// 最大ライフ
         int m_life = m_maxLife;					// 現在のライフ
-        int m_bulletRadius = 10;        // 弾の大きさ
+        double m_bulletRadius = 10;        // 弾の大きさ
         double m_shotCoolTime = 0.5;			// ショットのクールダウン時間：秒
         bool m_inFinalLayer = false;        // 最終layerか
         bool m_hasGameOver = false;             // ゲームオーバーしているか
@@ -98,7 +98,7 @@ class PlayerController{
 
         /// @brief 弾のサイズを大きくする
         /// @param expansValue 加算値
-        void UpGrade_ExpansionBullet(int expansValue);
+        void UpGrade_ExpansionBullet(double expansValue);
 
         /// @brief 移動速度を上げる
         /// @param subtractValue 加算値
