@@ -250,14 +250,14 @@ void PlayerController::UpdateLife(int addValue)
 
 void PlayerController::Update(double deltaTime, bool isActive)
 {
+    UpdateBullets(deltaTime);
+    UpdateShotCoolTime(deltaTime);
     if (m_hasGameClear) return;
     if (m_hasGameOver) return;
     if(!isActive) return;
 
     Aiming();
     Shot();
-    UpdateBullets(deltaTime);
-    UpdateShotCoolTime(deltaTime);
     UpdateVelocity(m_velocity);
     Move(m_velocity, deltaTime);
     m_collider.setPos(m_position);
