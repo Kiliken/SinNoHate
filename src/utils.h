@@ -7,6 +7,7 @@
 # include "Hearts.h"
 # include "Title.h"
 # include "Boss.h"
+# include "InGameUI.h"
 
 namespace UTILS {
     void HeartsLoop(Array<Hearts>* hearts);

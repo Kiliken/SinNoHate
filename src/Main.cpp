@@ -35,6 +35,7 @@ void Main()
     TextureAsset::Register(U"PlayerSprite", U"Assets/PlayerSprite.png");
     TextureAsset::Register(U"HeartSprite", U"Assets/heartSprite.png");
     TextureAsset::Register(U"BossSprite", U"Assets/bossSprite.png");
+    TextureAsset::Register(U"HeartTexture", U"Assets/HeartTexture.png");    // UI
     // Load font
     FontAsset::Register(U"Text", FontMethod::MSDF, 48, U"Assets/DotGothic16-Regular.ttf");
 
@@ -43,11 +44,16 @@ void Main()
     constexpr double InitialEnemySpawnInterval = 2.0;
     double enemySpawnTime = InitialEnemySpawnInterval;
     double enemyAccumulatedTime = 0.0;
+    int enemyScore = 100;
+    int bossScore = 1000;
+
+    int currentScore = 0;   // UI
 
     Map map;                                             // Create map instance
     Shop shop;                                           // Create shop instance
     PlayerController playerController({256.0f, 240.0f}); // Create player controller instance
     Title title;
+    UI playerUI;
 
     Boss boss(&playerController);
 
@@ -150,6 +156,7 @@ void Main()
                     enemy = enemies.erase(enemy);
                     enemySound.play();
                     erased = true;
+                    currentScore += enemyScore;
                     break;
                 }
             }
@@ -215,6 +222,8 @@ void Main()
         }
 
         shop.DrawShop();
+
+        playerUI.DrawUI(currentScore, playerController.MaxLife(), playerController.Life());
 
         if (title.gameStarted && title.startingSeqCounter > 0 && title.startingSeqCounter < 3)
         {
