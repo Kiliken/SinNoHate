@@ -220,7 +220,7 @@ void PlayerController::UpGrade_IncreaseMaxLife(int addValue)
     OnDownLayer();
 }
 
-void PlayerController::UpGrade_ExpansionBullet(int expansValue)
+void PlayerController::UpGrade_ExpansionBullet(double expansValue)
 {
     if (m_hasGameClear) return;
     if (m_hasGameOver) return;
