@@ -46,6 +46,8 @@ void Main()
     double enemyAccumulatedTime = 0.0;
     int enemyScore = 100;
     int bossScore = 1000;
+    bool gameStart = false;
+    bool firstLevelStart = false;
 
     int currentScore = 0;   // UI
 
@@ -54,6 +56,7 @@ void Main()
     PlayerController playerController({256.0f, 240.0f}); // Create player controller instance
     Title title;
     UI playerUI;
+    LevelTitle levelTitle;
 
     Boss boss(&playerController);
 
@@ -77,6 +80,17 @@ void Main()
             // enemySpawnTime = Max(enemySpawnTime * 0.95, 0.3);
             // enemies << GenerateEnemy();
             enemies << Enemy(RandomUint8() % (map.currentLayer + 1), &playerController);
+        }
+
+        if (!gameStart && title.startingSeqCounter >= 2.4)
+        {
+            gameStart = true;
+        }
+        if (gameStart && !firstLevelStart)
+        {
+            levelTitle.NextLevel();
+            gameStart = false;
+            firstLevelStart = true;
         }
 
         // debug
@@ -108,6 +122,7 @@ void Main()
                 {
                     map.StartNextLayer();
                     shop.ResetShop();
+                    levelTitle.NextLevel();
 
                     enemySpawnTime -= 0.4; // change the enemey spawn count based on the level
                     enemySpawnTime = Math::Max(enemySpawnTime, 0.3);
@@ -124,10 +139,13 @@ void Main()
         map.UpdateMap(deltaTime, playerController, &enemies);
         // shop.UpdateShop(player); // update shop
 
+        
+
         // when player is inactive
         if (map.layerSwitched || title.startingSeqCounter < 2.35)
         {
             playerController.Update(deltaTime, false);
+            
         }
         else
         {
@@ -192,7 +210,18 @@ void Main()
 
             map.Draw();
         }
+        
 
+
+        if (levelTitle.isDisplaying) {
+            levelTitle.levelTitleTimer += deltaTime;
+        }
+        if (levelTitle.levelTitleTimer >= levelTitle.levelTitleDisplayTime)
+        {
+            levelTitle.DisableDisplay();
+        }
+        levelTitle.DrawLevelTitle();
+        
         playerController.Draw(deltaTime);
        
 
@@ -224,6 +253,8 @@ void Main()
         shop.DrawShop();
 
         playerUI.DrawUI(currentScore, playerController.MaxLife(), playerController.Life());
+
+
 
         if (title.gameStarted && title.startingSeqCounter > 0 && title.startingSeqCounter < 3)
         {
