@@ -95,11 +95,11 @@ void Map::EndLayer()
     if (currentLayer < layerCount - 1)
     {
         currentLayer++;
-        Console << U"Layer cleared. Moved to layer " << currentLayer;
+        //Console << U"Layer cleared. Moved to layer " << currentLayer;
     }
     else{
         allLayersCleared = true;
-        Console << U"Boss defeated " << currentLayer;
+        //Console << U"Boss defeated " << currentLayer;
     }
     layerSwitched = true;
 }
@@ -109,7 +109,7 @@ void Map::StartNextLayer()
 {
     spawningTraps = true; // resume spawning traps
     layerSwitched = false;
-    Console << U"Started layer " << currentLayer;
+    //Console << U"Started layer " << currentLayer;
 }
 
 
@@ -125,7 +125,7 @@ void Map::ResetMap()
 
     layerSwitched = false;
 
-    Console << U"Map reset";
+    //Console << U"Map reset";
 }
 
 
@@ -283,7 +283,7 @@ void Map::DrawTraps() {
 
             const uint64 t = Time::GetMillisec();
 	        const int32 x = (t / 60 % 3);
-            trapTexture((64 * x),0,64,64).drawAt(pos + Vec2(16, 16)); // add color
+            trapTexture((tileSize * 2 * x),0,tileSize * 2,tileSize * 2).drawAt(pos + Vec2(16, 16)); // add color
         }
         else{
             //trap.collider.draw(Palette::Red); // draw collider for debugging

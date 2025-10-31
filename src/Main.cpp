@@ -35,6 +35,7 @@ void Main()
     TextureAsset::Register(U"HeartSprite", Resource(U"Assets/heartSprite.png"));
     TextureAsset::Register(U"BossSprite", Resource(U"Assets/bossSprite.png"));
     TextureAsset::Register(U"HeartTexture", Resource(U"Assets/HeartTexture.png"));    // UI
+    TextureAsset::Register(U"ShopTexture", Resource(U"Assets/ShopTexture.png"));
     TextureAsset::Register(U"ShotSprite", Resource(U"Assets/shotSprite.png"));
     TextureAsset::Register(U"ShotSpriteEx", Resource(U"Assets/shotSprite_ex.png"));
     
