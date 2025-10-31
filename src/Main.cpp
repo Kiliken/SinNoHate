@@ -1,9 +1,5 @@
 ﻿#include "utils.h"
 
-struct PaletteSettings
-{
-    unsigned int currentPalette;
-};
 
 void Main()
 {
@@ -28,6 +24,8 @@ void Main()
     const Texture enemyPaletteTexture(U"Assets/EnemyPalette.png");
     const Texture stagePaletteTexture(U"Assets/StagePalette.png");
 
+    Effect effect;
+
     // Load textures and sprites
     // Texture mapTexture(U"map.png");
     TextureAsset::Register(U"MapTexture", U"Assets/MapTexture.png");
@@ -51,7 +49,7 @@ void Main()
 
     Boss boss(&playerController);
 
-    const Audio enemySound{ GMInstrument::StringEnsemble1, PianoKey::C1, 0.3s };
+    const Audio enemySound{GMInstrument::StringEnsemble1, PianoKey::C1, 0.3s};
 
     while (System::Update())
     {
@@ -144,9 +142,10 @@ void Main()
                 {
                     if (RandomInt32() % 20 < 1)
                         hearts << Hearts(enemy->GetCollider().center, &playerController);
-                    
+
                     enemySound.stop();
                     bullet->OnHit();
+                    effect.add<Spark>(enemy->GetCollider().center,enemy->GetEnemyType());
                     enemy = enemies.erase(enemy);
                     enemySound.play();
                     erased = true;
@@ -162,7 +161,7 @@ void Main()
 
         if (map.currentLayer == map.layerCount - 1 && boss.GetStatus() && !map.layerSwitched)
         {
-            
+
             boss.Update();
             for (const auto &bullet : playerController.GetBullets())
             {
@@ -173,7 +172,6 @@ void Main()
                     break;
                 }
             }
-            
         }
 
         // Draw the map
@@ -187,7 +185,6 @@ void Main()
         }
 
         playerController.Draw(deltaTime);
-       
 
         {
 
@@ -205,7 +202,6 @@ void Main()
             {
                 Graphics2D::SetPSConstantBuffer(1, enemyPalette[boss.GetCurretType()]);
                 boss.Draw();
-                
             }
         }
 
@@ -214,13 +210,13 @@ void Main()
             heart.Draw();
         }
 
+        effect.update();
+
         shop.DrawShop();
 
         if (title.gameStarted && title.startingSeqCounter > 0 && title.startingSeqCounter < 3)
         {
             title.update();
         }
-
-        
     }
 }

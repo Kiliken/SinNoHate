@@ -39,4 +39,6 @@ public:
     int8_t GetCurretType();
     bool GetStatus();
     void GetDamage();
+
+    void Reset();
 };
