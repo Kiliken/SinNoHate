@@ -77,6 +77,7 @@ public:
 
 private:
     Texture mapTexture;
+    Texture trapTexture;
 
     Array<float> bgTileYPos; // y positions of background tiles in texture
     float bgScrollSpeed = 60.0f; // background scroll speed

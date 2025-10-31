@@ -31,6 +31,7 @@ void Main()
     // Load textures and sprites
     // Texture mapTexture(U"map.png");
     TextureAsset::Register(U"MapTexture", U"Assets/MapTexture.png");
+    TextureAsset::Register(U"TrapTexture", U"Assets/TrapTexture.png");
     TextureAsset::Register(U"EnemySprite", U"Assets/EnemySprite.png");
     TextureAsset::Register(U"PlayerSprite", U"Assets/PlayerSprite.png");
     TextureAsset::Register(U"HeartSprite", U"Assets/heartSprite.png");
