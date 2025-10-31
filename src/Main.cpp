@@ -50,15 +50,27 @@ void Main()
     Boss boss(&playerController);
 
     const Audio enemySound{GMInstrument::StringEnsemble1, PianoKey::C1, 0.3s};
+    const Audio bgMusic{Resource(U"Assets/sound/lisztInferno.mp3") };
+    const Audio titleMusic{Resource(U"Assets/sound/lacrimosa.mp3") };
 
+    
     while (System::Update())
     {
         if (!title.gameStarted)
         {
+            if(!titleMusic.isPlaying())
+                titleMusic.play();
+
             title.update();
             // title.draw();
             continue;
         }
+
+        if(titleMusic.isPlaying())
+                titleMusic.stop();
+
+        if(!bgMusic.isPlaying())
+            bgMusic.play();
 
         const double deltaTime = Scene::DeltaTime();
         enemyAccumulatedTime += deltaTime;
