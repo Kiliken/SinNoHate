@@ -35,13 +35,12 @@ void Main()
     TextureAsset::Register(U"HeartSprite", Resource(U"Assets/heartSprite.png"));
     TextureAsset::Register(U"BossSprite", Resource(U"Assets/bossSprite.png"));
     TextureAsset::Register(U"HeartTexture", Resource(U"Assets/HeartTexture.png"));    // UI
-    TextureAsset::Register(U"ShotSprite",Resource(U"Assets/shotSprite.png"));
-    TextureAsset::Register(U"ShotSpriteEx",Resource(U"Assets/shotSprite_ex.png"));
+    TextureAsset::Register(U"ShotSprite", Resource(U"Assets/shotSprite.png"));
+    TextureAsset::Register(U"ShotSpriteEx", Resource(U"Assets/shotSprite_ex.png"));
     
     // Load Audio
     AudioAsset::Register(U"BGM", Audio::Stream, Resource(U"Assets/sound/lisztInferno.mp3"));
     AudioAsset::Register(U"TitleBGM", Audio::Stream, Resource(U"Assets/sound/lacrimosa.mp3"));
-    
     
     
     // Load font
@@ -56,6 +55,7 @@ void Main()
     int bossScore = 1000;
 
     int currentScore = 0;   // UI
+    bool gameClear = false;
 
     Map map;                                             // Create map instance
     Shop shop;                                           // Create shop instance
@@ -201,6 +201,13 @@ void Main()
                     break;
                 }
             }
+        }
+
+        if (map.currentLayer == map.layerCount - 1 && !boss.GetStatus() && !gameClear){
+            gameClear = true;
+            currentScore += bossScore;
+            effect.add<Spark>(boss.GetCollider().center,boss.GetCurretType());
+            map.MapGameClear();
         }
 
         // Draw the map
