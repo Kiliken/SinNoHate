@@ -41,6 +41,7 @@ void Main()
     // Load Audio
     AudioAsset::Register(U"BGM", Audio::Stream, Resource(U"Assets/sound/lisztInferno.mp3"));
     AudioAsset::Register(U"TitleBGM", Audio::Stream, Resource(U"Assets/sound/lacrimosa.mp3"));
+    AudioAsset::Register(U"EndBGM", Audio::Stream, Resource(U"Assets/sound/odetojoy.mp3"));
     
     
     // Load font
@@ -71,6 +72,7 @@ void Main()
     const Audio enemySound{GMInstrument::StringEnsemble1, PianoKey::C1, 0.3s};
     const Audio bgMusic{ AudioAsset{U"BGM"} };
     const Audio titleMusic{ AudioAsset{U"TitleBGM"} };
+    const Audio endMusic{ AudioAsset{U"EndBGM"} };
 
     
     while (System::Update())
