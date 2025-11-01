@@ -1,37 +1,29 @@
-# include "Title.h"
+# include "GameOver.h"
 
 
 
-Title::Title()
+GameOver::GameOver()
 {
-	playButton = new Button(Rect{ Scene::Width()/2 -150, Scene::Height()*3/5, 300, 100 }, FontAsset(U"TitleFont"), U"PLAY");
-	//quitButton = new Button(Rect{ Scene::Width()/2 -150, Scene::Height()/2, 300, 100 }, FontAsset(U"TitleFont"), U"QUIT");
+	menuButton = new Button(Rect{ Scene::Width()/2 -150, Scene::Height()*3/5, 300, 100 }, FontAsset(U"TitleFont"), U"TITLE");
 }
 
-Title::~Title()
+GameOver::~GameOver()
 {
-	playButton = nullptr;
-	//quitButton = nullptr;
+	menuButton = nullptr;
 }
 
 // Update function
-void Title::update()
+void GameOver::update()
 {
 	const double deltaTime = Scene::DeltaTime();
 	// On left click
-	playButton->update();
+	menuButton->update();
 
-	if (playButton->clicked())
+	if (menuButton->clicked())
 	{
-		startingSequence = true;
-		gameStarted = true;
+		
 	}
 
-	// if (quitButton->clicked())
-	// {
-	// 	// Transition to game scene
-	// 	System::Exit();
-	// }
 
 	if (startingSequence) {
 		startingSeqCounter += deltaTime;
@@ -55,7 +47,7 @@ void Title::update()
 }
 
 // Draw function
-void Title::draw()
+void GameOver::draw()
 {
 	Scene::SetBackground(ColorF{ 0.3, 0.3, 0.3 });
 	if (startingSequence || playButton->hovered()){
@@ -79,9 +71,6 @@ void Title::draw()
 		inferno.drawAt(basePos);
 	}
 
-
-	// Add japanese text
-	FontAsset(U"TitleFont")(String(U"TEST GAME")).drawAt(60, Vec2{ Scene::Size().x/2, Scene::Size().y/8 }, ColorF{ 1, 0.506, 0.09, 1 });
 
 }
 
