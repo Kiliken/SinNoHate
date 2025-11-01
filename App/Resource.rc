@@ -153,6 +153,9 @@ Resource(Assets/DotGothic16-Regular.ttf)
 // Audio
 Resource(Assets/sound/lisztInferno.mp3)
 Resource(Assets/sound/lacrimosa.mp3)
+Resource(Assets/sound/shoot.mp3)
+Resource(Assets/sound/takedamage.mp3)
+Resource(Assets/sound/levelcard.mp3)
 
 // Title
 Resource(Assets/TitlescreenAssets/entrys.png)
@@ -179,3 +182,8 @@ Resource(Assets/LevelTitle/Sorrow.png)
 Resource(Assets/LevelTitle/Pride.png)
 Resource(Assets/LevelTitle/Wrath.png)
 
+// GameOver
+Resource(Assets/GameOverScreenAssets/CurtainLeft.png)
+Resource(Assets/GameOverScreenAssets/CurtainRight.png)
+Resource(Assets/GameOverScreenAssets/GameOver.png)
+Resource(Assets/GameOverScreenAssets/MenuButton.png)

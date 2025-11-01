@@ -2,6 +2,7 @@
 
 # include <Siv3D.hpp>
 # include "Button.h"
+#include "MapManager.h"
 
 class GameOver
 {
@@ -19,22 +20,28 @@ public:
 
     void reset();
 
-	bool gameOver = false;
-	bool startingSequence = false;
+    void OnMenuBtnPress();
+
+    bool menuBtnPressed = false;
+    bool gameOver = false;
 	float startingSeqCounter = 0;
 
 private:
-	Button* playButton;
+	Button* menuButton;
 	const s3d::Texture curtainL{Resource(U"Assets/GameOverScreenAssets/CurtainLeft.png")};
 	const s3d::Texture curtainR{Resource(U"Assets/GameOverScreenAssets/CurtainRight.png")};
-	const s3d::Texture gameOver{Resource(U"Assets/GameOverScreenAssets/GameOver.png")};
-	const s3d::Texture menuButton{Resource(U"Assets/GameOverScreenAssets/MenuButton.png")};
+	const s3d::Texture gameOverTexture{Resource(U"Assets/GameOverScreenAssets/GameOver.png")};
+	const s3d::Texture menuButtonTexture{Resource(U"Assets/GameOverScreenAssets/MenuButton.png")};
 
 
-	Vec2 basePos = Vec2(Scene::Width()/2, Scene::Height()/2);
-	Vec2 skyPos = Vec2(Scene::Width()/2, Scene::Height()/2);
-	Vec2 cloudRPos = Vec2(Scene::Width()/2, Scene::Height()/2);
-	Vec2 cloudLPos = Vec2(Scene::Width()/2, Scene::Height()/2);
-	Vec2 fallingPos = Vec2(Scene::Width()/2, Scene::Height()/2);
-	Vec2 entryPos = Vec2(Scene::Width()/2, Scene::Height()/2 + 600);
+	const Vec2 basePos = Vec2(Scene::Width()/2, Scene::Height()/2);
+    const Vec2 gameOverPos = basePos;
+    const Vec2 menuBtnPos = basePos;
+    const Vec2 curtainLPos = Vec2(0, Scene::Height()/2);
+    const Vec2 curtainRPos = Vec2(Scene::Width(), Scene::Height()/2);
+
+    Vec2 curtainLPosC = curtainLPos;
+    Vec2 curtainRPosC = curtainRPos;
+
+    bool showText = false;
 };

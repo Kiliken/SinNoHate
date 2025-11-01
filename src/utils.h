@@ -9,6 +9,7 @@
 #include "Boss.h"
 #include "InGameUI.h"
 #include "LevelTitle.h"
+#include "GameOver.h"
 
 namespace UTILS
 {

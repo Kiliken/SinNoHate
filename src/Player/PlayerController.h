@@ -38,6 +38,10 @@ class PlayerController{
 
         AsyncTask<void> m_crossHairAnim;
 
+        Audio shootSFX;
+        Audio takeDamageSFX;
+        
+
         /// @brief マウスカーソルの位置に応じて発射方向を管理
         void Aiming();
 
@@ -123,6 +127,12 @@ class PlayerController{
 
         /// @brief ゲームクリア
         void OnGameClear();
+
+        /// @brief プレイヤーを元に戻す
+        void ResetPlayer();
+
+        /// @brief プレイヤーが死んだか確認する
+        bool IsPlayerDead();
 
         /// @brief 当たり判定を取得
         Circle* Collider();
