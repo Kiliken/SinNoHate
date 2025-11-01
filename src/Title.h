@@ -17,6 +17,8 @@ public:
 	// Draw function
 	void draw();
 
+    void reset();
+
 	bool gameStarted = false;
 	bool startingSequence = false;
 	float startingSeqCounter = 0;

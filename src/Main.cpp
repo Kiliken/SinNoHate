@@ -122,8 +122,10 @@ void Main()
             // shop.ShowShop();
 
             // map.ResetMap();
-            enemies.clear();
-            map.MapGameClear();
+            //enemies.clear();
+            //map.MapGameClear();
+
+            title.reset();
         }
 
         // handle layer switching and shop

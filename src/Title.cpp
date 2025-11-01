@@ -19,7 +19,7 @@ void Title::update()
 {
 	const double deltaTime = Scene::DeltaTime();
 	// On left click
-	playButton->update();
+    playButton->update();
 
 	if (playButton->clicked())
 	{
@@ -52,6 +52,25 @@ void Title::update()
 
 
 	draw();
+}
+
+void Title::reset()
+{
+    // Animation control flags
+    startingSequence = false;
+    startingSeqCounter = 0.0;
+    gameStarted = false;
+
+    // Reset all positions
+    basePos = Vec2(Scene::Width() / 2, Scene::Height() / 2);
+    skyPos = Vec2(Scene::Width()/2, Scene::Height()/2);
+    fallingPos = Vec2(Scene::Width()/2, Scene::Height()/2);;
+    entryPos = Vec2(Scene::Width()/2, Scene::Height()/2 + 600);
+    cloudLPos = Vec2(Scene::Width()/2, Scene::Height()/2);;
+    cloudRPos = Vec2(Scene::Width()/2, Scene::Height()/2);;
+    playerSpriteCallibration = Vec2(1,9); 
+
+    //Console << U"Title screen reset to initial state.";
 }
 
 // Draw function
