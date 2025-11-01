@@ -19,8 +19,6 @@ GameOver::~GameOver()
 void GameOver::update()
 {
 	const double deltaTime = Scene::DeltaTime();
-	// On left click
-    menuButton->update();
 
 	if (gameOver) {
         if (menuButton->clicked() && !menuBtnPressed)
@@ -36,6 +34,9 @@ void GameOver::update()
 		}
 		else {
             showText = true;
+
+            // On left click
+            menuButton->update();
         }
 	}
 
@@ -56,7 +57,7 @@ void GameOver::reset()
     curtainLPosC = curtainLPos;
     curtainRPosC = curtainRPos;
 
-    Console << U"Game Over screen reset to initial state.";
+    //Console << U"Game Over screen reset to initial state.";
 }
 
 void GameOver::OnMenuBtnPress(){

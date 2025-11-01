@@ -91,6 +91,10 @@ void Main()
             if(gameOver.menuBtnPressed){
                 map.ResetMap();
                 enemies.clear();
+                enemySpawnTime = InitialEnemySpawnInterval;
+                enemyAccumulatedTime = 0.0;
+                hearts.clear();
+                boss.Reset();
                 playerController.ResetPlayer();
                 title.reset();
 
@@ -121,6 +125,8 @@ void Main()
             bgMusic.play();
 
         const double deltaTime = Scene::DeltaTime();
+        
+        //if(!gameOver.gameOver)
         enemyAccumulatedTime += deltaTime;
 
         while (enemySpawnTime <= enemyAccumulatedTime && map.currentLayer < map.layerCount - 1)
