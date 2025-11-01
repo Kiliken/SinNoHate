@@ -2,11 +2,15 @@
 
 LevelTitle::LevelTitle()
 {
+    levelCardSFX = AudioAsset(U"LevelCardSFX");
 }
 
 void LevelTitle::NextLevel(){
     level++;
     isDisplaying = true;
+
+    levelCardSFX.stop();
+    levelCardSFX.play();
 }
 
 void LevelTitle::DisableDisplay(){

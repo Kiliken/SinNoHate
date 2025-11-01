@@ -35,6 +35,7 @@ void Main()
     TextureAsset::Register(U"HeartSprite", Resource(U"Assets/heartSprite.png"));
     TextureAsset::Register(U"BossSprite", Resource(U"Assets/bossSprite.png"));
     TextureAsset::Register(U"HeartTexture", Resource(U"Assets/HeartTexture.png"));    // UI
+    TextureAsset::Register(U"ShopTexture", Resource(U"Assets/ShopTexture.png"));
     TextureAsset::Register(U"ShotSprite", Resource(U"Assets/shotSprite.png"));
     TextureAsset::Register(U"ShotSpriteEx", Resource(U"Assets/shotSprite_ex.png"));
     
@@ -43,6 +44,11 @@ void Main()
     AudioAsset::Register(U"TitleBGM", Audio::Stream, Resource(U"Assets/sound/lacrimosa.mp3"));
     AudioAsset::Register(U"EndBGM", Audio::Stream, Resource(U"Assets/sound/odetojoy.mp3"));
     
+
+    // Load SFX
+    AudioAsset::Register(U"ShootSFX", Audio::Stream, Resource(U"Assets/sound/shoot.mp3"));
+    AudioAsset::Register(U"TakeDamageSFX", Audio::Stream, Resource(U"Assets/sound/takedamage.mp3"));
+    AudioAsset::Register(U"LevelCardSFX", Audio::Stream, Resource(U"Assets/sound/levelcard.mp3"));
     
     // Load font
     FontAsset::Register(U"Text", FontMethod::MSDF, 48, Resource(U"Assets/DotGothic16-Regular.ttf"));
@@ -66,6 +72,7 @@ void Main()
     Title title;
     UI playerUI;
     LevelTitle levelTitle;
+    GameOver gameOver;
 
     Boss boss(&playerController);
 
@@ -77,6 +84,33 @@ void Main()
     
     while (System::Update())
     {
+        if(gameOver.gameOver){
+            if(bgMusic.isPlaying())
+                bgMusic.stop();
+            
+            //gameOver.update();
+
+            // GAME OVER GAME RESET
+            if(gameOver.menuBtnPressed){
+                map.ResetMap();
+                enemies.clear();
+                enemySpawnTime = InitialEnemySpawnInterval;
+                enemyAccumulatedTime = 0.0;
+                hearts.clear();
+                boss.Reset();
+                playerController.ResetPlayer();
+                title.reset();
+
+                gameStart = false;
+                firstLevelStart = false;
+                levelTitle.level = 0;
+
+                currentScore = 0;
+
+                gameOver.OnMenuBtnPress();
+            }
+        }
+
         if (!title.gameStarted)
         {
             if(!titleMusic.isPlaying())
@@ -94,6 +128,8 @@ void Main()
             bgMusic.play();
 
         const double deltaTime = Scene::DeltaTime();
+        
+        //if(!gameOver.gameOver)
         enemyAccumulatedTime += deltaTime;
 
         while (enemySpawnTime <= enemyAccumulatedTime && map.currentLayer < map.layerCount - 1)
@@ -123,8 +159,17 @@ void Main()
             // shop.ShowShop();
 
             // map.ResetMap();
-            enemies.clear();
-            map.MapGameClear();
+            //enemies.clear();
+            //map.MapGameClear();
+
+            //title.reset();
+
+            //gameOver.gameOver = true;
+        }
+
+        // GAME OVER
+        if(playerController.IsPlayerDead() && !gameOver.gameOver){
+            gameOver.gameOver = true;
         }
 
         // handle layer switching and shop
@@ -132,7 +177,7 @@ void Main()
         {
             enemies.clear();
             // up to final boss
-            if (map.currentLayer <= map.layerCount)
+            if (map.currentLayer < map.layerCount && !map.allLayersCleared)
             {
                 // wait for player to finish shopping
                 if (!shop.shopActive)
@@ -175,36 +220,39 @@ void Main()
         }
 
         // EnemyLoop
-        for (auto enemy = enemies.begin(); enemy != enemies.end();)
-        {
-            if (enemy->Update())
+        if(!gameOver.gameOver){
+            for (auto enemy = enemies.begin(); enemy != enemies.end();)
             {
-                enemy = enemies.erase(enemy);
-                continue;
-            }
-
-            bool erased = false;
-            for (const auto &bullet : playerController.GetBullets())
-            {
-                if (bullet->GetCollider()->intersects(enemy->GetCollider()))
+                if (enemy->Update())
                 {
-                    if (RandomInt32() % 20 < 1)
-                        hearts << Hearts(enemy->GetCollider().center, &playerController);
-
-                    enemySound.stop();
-                    bullet->OnHit();
-                    effect.add<Spark>(enemy->GetCollider().center,enemy->GetEnemyType());
                     enemy = enemies.erase(enemy);
-                    enemySound.play();
-                    erased = true;
-                    currentScore += enemyScore;
-                    break;
+                    continue;
                 }
-            }
 
-            if (!erased)
-                ++enemy;
+                bool erased = false;
+                for (const auto &bullet : playerController.GetBullets())
+                {
+                    if (bullet->GetCollider()->intersects(enemy->GetCollider()))
+                    {
+                        if (RandomInt32() % 20 < 1)
+                            hearts << Hearts(enemy->GetCollider().center, &playerController);
+
+                        enemySound.stop();
+                        bullet->OnHit();
+                        effect.add<Spark>(enemy->GetCollider().center,enemy->GetEnemyType());
+                        enemy = enemies.erase(enemy);
+                        enemySound.play();
+                        erased = true;
+                        currentScore += enemyScore;
+                        break;
+                    }
+                }
+
+                if (!erased)
+                    ++enemy;
+            }
         }
+        
 
         UTILS::HeartsLoop(&hearts);
 
@@ -228,7 +276,7 @@ void Main()
             playerController.OnGameClear();
             currentScore += bossScore;
             effect.add<Spark>(boss.GetCollider().center,boss.GetCurretType());
-            map.MapGameClear();
+            map.EndLayer();
         }
 
         // Draw the map
@@ -290,5 +338,7 @@ void Main()
         {
             title.update();
         }
+
+        gameOver.update();
     }
 }

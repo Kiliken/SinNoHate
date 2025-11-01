@@ -11,7 +11,7 @@ class BulletBase{
         Vec2 m_velocity{ 0, 0 };
 
         Color m_color;
-        int m_radius;
+        double m_radius;
         Vec2 m_moveDirection;
         Vec2 m_position;
 
@@ -22,7 +22,7 @@ class BulletBase{
     public:
         bool IsActive();
 
-        BulletBase(Vec2 firstPosition, Vec2 firstDirection, int radius, int layerIndex);
+        BulletBase(Vec2 firstPosition, Vec2 firstDirection, double radius, int layerIndex);
 
         void Init(Vec2 firstPosition, Vec2 firstDirection, int radius);
 

@@ -137,10 +137,12 @@ Resource(Assets/PlayerSprite.png)
 Resource(Assets/heartSprite.png)
 Resource(Assets/bossSprite.png)
 Resource(Assets/HeartTexture.png)
+Resource(Assets/ShopTexture.png)
 Resource(Assets/crossHair.png)
 Resource(Assets/crossHair_ex.png)
 Resource(Assets/shotSprite.png)
 Resource(Assets/shotSprite_ex.png)
+Resource(Assets/featherSprite.png)
 
 // Shader
 Resource(Assets/shaders/colorSwap.hlsl)
@@ -152,6 +154,9 @@ Resource(Assets/DotGothic16-Regular.ttf)
 Resource(Assets/sound/lisztInferno.mp3)
 Resource(Assets/sound/lacrimosa.mp3)
 Resource(Assets/sound/odetojoy.mp3)
+Resource(Assets/sound/shoot.mp3)
+Resource(Assets/sound/takedamage.mp3)
+Resource(Assets/sound/levelcard.mp3)
 
 // Title
 Resource(Assets/TitlescreenAssets/entrys.png)
@@ -184,3 +189,8 @@ Resource(Assets/LevelTitle/Sorrow.png)
 Resource(Assets/LevelTitle/Pride.png)
 Resource(Assets/LevelTitle/Wrath.png)
 
+// GameOver
+Resource(Assets/GameOverScreenAssets/CurtainLeft.png)
+Resource(Assets/GameOverScreenAssets/CurtainRight.png)
+Resource(Assets/GameOverScreenAssets/GameOver.png)
+Resource(Assets/GameOverScreenAssets/MenuButton.png)

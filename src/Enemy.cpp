@@ -105,7 +105,7 @@ bool Enemy::Update()
     {
         player->OnDamage();
         damageCooldown = 10.0;
-        Print << U"SHADOW HIT";
+        //Print << U"SHADOW HIT";
     }
 
 

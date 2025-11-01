@@ -95,10 +95,11 @@ void Map::EndLayer()
     if (currentLayer < layerCount - 1)
     {
         currentLayer++;
-        Console << U"Layer cleared. Moved to layer " << currentLayer;
+        //Console << U"Layer cleared. Moved to layer " << currentLayer;
     }
     else{
         allLayersCleared = true;
+        //Console << U"Boss defeated " << currentLayer;
     }
     layerSwitched = true;
 }
@@ -108,7 +109,7 @@ void Map::StartNextLayer()
 {
     spawningTraps = true; // resume spawning traps
     layerSwitched = false;
-    Console << U"Started layer " << currentLayer;
+    //Console << U"Started layer " << currentLayer;
 }
 
 
@@ -124,7 +125,7 @@ void Map::ResetMap()
 
     layerSwitched = false;
 
-    Console << U"Map reset";
+    //Console << U"Map reset";
 }
 
 
@@ -157,7 +158,7 @@ void Map::CreateTraps()
         if(positionOccupied) continue; // skip this iteration if occupied
 
         traps.emplace_back(0, Vec2(x, y), trapDamageValues[currentLayer]);
-        Console << U"Trap created at (" << x << U"," << y << U")";
+        //Console << U"Trap created at (" << x << U"," << y << U")";
     }
 }
 
@@ -196,7 +197,7 @@ void Map::UpdateTraps(double deltaTime, PlayerController& player, Array<Enemy>* 
         // check collision with player and bullets プレイヤーとの当たり判定を確認
         if(CheckTrapCollisions(trap, player) && !trap.activated) {
             trap.activated = true;
-            Console << U"Trap at (" << trap.position.x << U"," << trap.position.y << U") activated!";
+            //Console << U"Trap at (" << trap.position.x << U"," << trap.position.y << U") activated!";
         }
         else if(trap.activated) {
             // after activation, check explosion collision
@@ -204,14 +205,14 @@ void Map::UpdateTraps(double deltaTime, PlayerController& player, Array<Enemy>* 
                 //player.currentHP -= trap.damage; // apply damage again
                 player.OnDamage(); // apply damage through method
                 trap.damagedPlayer = true;
-                Console << U"Player hit by trap explosion! Current HP: " << player.Life();
+                //Console << U"Player hit by trap explosion! Current HP: " << player.Life();
             }
 
             // CHECK ENEMY COLLISION HERE
             for (auto enemy = enemies->begin(); enemy != enemies->end();){
                 if(enemy->GetCollider().intersects(trap.explosionCol)){
                     enemy = enemies->erase(enemy);
-                    Console << U"Enemy BOOM!";
+                    //Console << U"Enemy BOOM!";
                     continue;
                 }
 
@@ -248,7 +249,7 @@ bool Map::CheckTrapCollisions(Trap& trap, PlayerController& player)
     
     for(const auto& bullet : player.GetBullets()) {
         if(bullet->GetCollider()->intersects(trap.collider)) {
-            Console << U"Bullet collided with trap at (" << trap.position.x << U"," << trap.position.y << U")";
+            //Console << U"Bullet collided with trap at (" << trap.position.x << U"," << trap.position.y << U")";
             // destroy bullet here
             bullet->OnHit();
 
@@ -268,7 +269,7 @@ void Map::DestroyTrap(Trap& trap)
         return t.position == trap.position;
     });
     
-    Console << U"Trap at (" << trap.position.x << U"," << trap.position.y << U") destroyed.";
+    //Console << U"Trap at (" << trap.position.x << U"," << trap.position.y << U") destroyed.";
 }
 
 
@@ -282,7 +283,7 @@ void Map::DrawTraps() {
 
             const uint64 t = Time::GetMillisec();
 	        const int32 x = (t / 60 % 3);
-            trapTexture((64 * x),0,64,64).drawAt(pos + Vec2(16, 16)); // add color
+            trapTexture((tileSize * 2 * x),0,tileSize * 2,tileSize * 2).drawAt(pos + Vec2(16, 16)); // add color
         }
         else{
             //trap.collider.draw(Palette::Red); // draw collider for debugging

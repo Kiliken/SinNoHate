@@ -4,6 +4,11 @@
 
 PlayerController::PlayerController(Vec2 firstPosition,Effect* ef)
 {
+    shootSFX = AudioAsset(U"ShootSFX");
+    shootSFX.setVolume(10.0f);
+    takeDamageSFX = AudioAsset(U"TakeDamageSFX");
+    takeDamageSFX.setVolume(10.0f);
+
     m_currentLayer = 0;
     m_firstPosition = firstPosition;
     m_position = m_firstPosition;
@@ -154,6 +159,10 @@ void PlayerController::Shot()
         m_shotable = false;
         m_crossHairAnim = Async([this]() {CrossHairAnimation(m_shotCoolTime, Scene::DeltaTime());});
         m_bullets << bullet;
+
+        shootSFX.stop();
+        shootSFX.setVolume(10.0f);
+        shootSFX.play();
     }
 }
 
@@ -187,11 +196,37 @@ void PlayerController::OnDamage()
 {
     if (m_hasGameClear) return;
     if (m_hasGameOver) return;
+    particles->add<Feathers>(m_position);
     UpdateLife(-1);
     if (m_life <= 0){
         m_hasGameOver = true;
     }
+
+    takeDamageSFX.stop();
+    takeDamageSFX.setVolume(10.0f);
+    takeDamageSFX.play();
     //Print << U"OUCH";
+}
+
+void PlayerController::ResetPlayer(){
+    m_maxLife = 3;
+    m_life = m_maxLife;
+    m_bulletRadius = 10;
+    m_shotCoolTime = 0.5;
+    m_inFinalLayer = false;       
+    m_hasGameOver = false;             
+    m_hasGameClear = false;      
+    m_shotable = true;
+    m_position = m_firstPosition;
+    m_collider.setPos(m_position);
+    m_shotPos = m_position + (m_aimDirection * m_shootPosDistance);
+    m_currentLayer = 0;
+    m_currentCrossHair = m_crossHair;
+    m_crossHairAnim = Async([this]() {CrossHairAnimation(m_shotCoolTime, Scene::DeltaTime());});
+}
+
+bool PlayerController::IsPlayerDead(){
+    return m_hasGameOver;
 }
 
 void PlayerController::HealLife()
@@ -220,7 +255,7 @@ void PlayerController::UpGrade_IncreaseMaxLife(int addValue)
     OnDownLayer();
 }
 
-void PlayerController::UpGrade_ExpansionBullet(int expansValue)
+void PlayerController::UpGrade_ExpansionBullet(double expansValue)
 {
     if (m_hasGameClear) return;
     if (m_hasGameOver) return;
@@ -250,14 +285,14 @@ void PlayerController::UpdateLife(int addValue)
 
 void PlayerController::Update(double deltaTime, bool isActive)
 {
+    UpdateBullets(deltaTime);
+    UpdateShotCoolTime(deltaTime);
     if (m_hasGameClear) return;
     if (m_hasGameOver) return;
     if(!isActive) return;
 
     Aiming();
     Shot();
-    UpdateBullets(deltaTime);
-    UpdateShotCoolTime(deltaTime);
     UpdateVelocity(m_velocity);
     Move(m_velocity, deltaTime);
     m_collider.setPos(m_position);

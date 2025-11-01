@@ -16,6 +16,7 @@ class LevelTitle{
         
 
     private:
+        Audio levelCardSFX;
         const s3d::Texture SlothText{Resource(U"Assets/LevelTitle/Sloth.png")};
         const s3d::Texture GluttonyText{Resource(U"Assets/LevelTitle/Gluttony.png")};
         const s3d::Texture SorrowText{Resource(U"Assets/LevelTitle/Sorrow.png")};

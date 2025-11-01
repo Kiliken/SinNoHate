@@ -2,6 +2,7 @@
 
 
 Shop::Shop() {
+    itemTexture = TextureAsset(U"ShopTexture");
     AddItems();
 }
 
@@ -17,7 +18,7 @@ void Shop::AddItems() {
         newItem.name = itemNames[possibleItems[i]];
         newItem.rect = Rect(startX + i * (itemW + spacing), y, itemW, itemH); // debug rect positions
         itemsInShop.push_back(newItem);
-        Console << U"Added item to shop: " << newItem.name;
+        //Console << U"Added item to shop: " << newItem.name;
     }
 
     //confirmButton = Rect((Map::screenW - 120) / 2, y + itemH + 80, 120, 40);
@@ -29,20 +30,20 @@ void Shop::BuyItem(ItemType item, PlayerController& player) {
     switch (item) {
     case heart:
         player.UpGrade_IncreaseMaxLife(lifeIncrease);
-        Console << U"Bought Heart! Max HP: " << player.MaxLife();
+        //Console << U"Bought Heart! Max HP: " << player.MaxLife();
         break;
     case bullet:
         // Implement bullet upgrade
         player.UpGrade_ExpansionBullet(bulletExpansion);
-        Console << U"Bought Bullet Upgrade!";
+        //Console << U"Bought Bullet Upgrade!";
         break;
     case atkSpd:
         // Implement attack speed upgrade
         player.UpGrade_DecreaseAttackSpan(attackSpeedDecrease);
-        Console << U"Bought Attack Speed Upgrade!";
+        //Console << U"Bought Attack Speed Upgrade!";
         break;
     default:
-        Console << U"Unknown item!";
+        //Console << U"Unknown item!";
         break;
     }
     itemBought = true;
@@ -100,7 +101,8 @@ void Shop::DrawShop() {
         else if (selectedItem && item.type == *selectedItem) col = ColorF(1.0, 0.8, 0.2); // highlight selected
 
         item.rect.drawFrame(3, 0, col);
-       FontAsset(U"Text")(item.name).drawAt(12, item.rect.center() + Vec2(0, 70), col);
+        itemTexture(item.type * Map::tileSize * 2, 0, Map::tileSize * 2, Map::tileSize * 2).drawAt(item.rect.center());
+        FontAsset(U"Text")(item.name).drawAt(12, item.rect.center() + Vec2(0, 70), col);
     }
 
     // Draw confirm button only if an item is selected and not bought yet

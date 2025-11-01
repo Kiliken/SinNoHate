@@ -19,6 +19,8 @@ public:
 	void drawPlayer();
 	void resetTitle();
 
+    void reset();
+
 	bool gameStarted = false;
 	bool startingSequence = false;
 	float startingSeqCounter = 0;
