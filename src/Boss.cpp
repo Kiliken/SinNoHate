@@ -15,7 +15,6 @@ Boss::Boss(PlayerController* p)
     lustShadowPos = pos;
     lustShadowCollider.setR(40.0);
     
-        
 }
 
 Boss::~Boss()

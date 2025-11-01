@@ -187,6 +187,7 @@ void PlayerController::OnDamage()
 {
     if (m_hasGameClear) return;
     if (m_hasGameOver) return;
+    particles->add<Feathers>(m_position);
     UpdateLife(-1);
     if (m_life <= 0){
         m_hasGameOver = true;

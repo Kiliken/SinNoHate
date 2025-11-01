@@ -142,6 +142,7 @@ Resource(Assets/crossHair.png)
 Resource(Assets/crossHair_ex.png)
 Resource(Assets/shotSprite.png)
 Resource(Assets/shotSprite_ex.png)
+Resource(Assets/featherSprite.png)
 
 // Shader
 Resource(Assets/shaders/colorSwap.hlsl)
