@@ -125,6 +125,7 @@ void Map::ResetMap()
 
     layerSwitched = false;
     reverseScroll = false;
+    allLayersCleared = false;
 
     //Console << U"Map reset";
 }

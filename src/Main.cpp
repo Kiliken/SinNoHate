@@ -133,6 +133,7 @@ void Main()
                 boss.Reset();
                 playerController.ResetPlayer();
                 title.reset();
+                gameClear = false;
 
                 gameStart = false;
                 firstLevelStart = false;
@@ -141,7 +142,7 @@ void Main()
                 currentScore = 0;
 
                 gameClearSeq.reset();
-                gameClear = false;
+
                 endMusic.stop();
             }
         }
