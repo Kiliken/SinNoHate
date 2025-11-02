@@ -126,6 +126,7 @@ void Map::ResetMap()
     layerSwitched = false;
     reverseScroll = false;
     allLayersCleared = false;
+    bgCurrentScrollSpeed = bgScrollSpeed;
 
     //Console << U"Map reset";
 }

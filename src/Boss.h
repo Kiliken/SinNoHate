@@ -8,7 +8,7 @@ public:
 
 private:
     int8_t curretType;
-    int8_t hp = 5;
+    int8_t hp = 50;
 
     Texture sprite;
     Vec2 pos;
