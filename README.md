@@ -10,7 +10,7 @@ A **high-speed, top-down arcade shooter** for the contest [Bandai Namco Studio C
 
 ## 📥 Download
 
-**[Download the Latest Release Here]** (Link to Release Page)
+[**[Download the Latest Release Here]**](https://github.com/Kiliken/SinNoHate/releases)
 
 
 ## 👥 Members
@@ -23,7 +23,7 @@ A **high-speed, top-down arcade shooter** for the contest [Bandai Namco Studio C
 
 ## 🎬 Presentation
 
-**[Watch the Official Gameplay Trailer]** (Youtube video here)
+[![Game PV](https://img.youtube.com/vi/8uXQnZTJJ5E/0.jpg)](https://www.youtube.com/watch?v=8uXQnZTJJ5E)
 
 
 ## 🎮 Controls
