@@ -101,6 +101,7 @@ void Main()
                 boss.Reset();
                 playerController.ResetPlayer();
                 title.reset();
+                shop.ResetShop();
                 gameClear = false;
 
                 gameStart = false;
