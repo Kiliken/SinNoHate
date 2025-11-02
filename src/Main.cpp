@@ -73,6 +73,7 @@ void Main()
     UI playerUI;
     LevelTitle levelTitle;
     GameOver gameOver;
+    GameClear gameClearSeq;
 
     Boss boss(&playerController);
 
@@ -100,6 +101,7 @@ void Main()
                 boss.Reset();
                 playerController.ResetPlayer();
                 title.reset();
+                gameClear = false;
 
                 gameStart = false;
                 firstLevelStart = false;
@@ -111,20 +113,52 @@ void Main()
             }
         }
 
+        if (gameClearSeq.gameClear){
+            if(bgMusic.isPlaying())
+                bgMusic.stop();
+            if(!endMusic.isPlaying())
+                endMusic.play();
+
+            // gameClearSeq.update();
+            if (gameClearSeq.endingSeqCounter >= 26.0){
+                endMusic.fadeVolume(0.0, 3.0s);
+            }
+            // GAME CLEAR GAME RESET
+            if(gameClearSeq.endingSeqCounter > 30.0){
+                map.ResetMap();
+                enemies.clear();
+                enemySpawnTime = InitialEnemySpawnInterval;
+                enemyAccumulatedTime = 0.0;
+                hearts.clear();
+                boss.Reset();
+                playerController.ResetPlayer();
+                title.reset();
+
+                gameStart = false;
+                firstLevelStart = false;
+                levelTitle.level = 0;
+
+                currentScore = 0;
+
+                gameClearSeq.reset();
+                gameClear = false;
+                endMusic.stop();
+            }
+        }
+
         if (!title.gameStarted)
         {
             if(!titleMusic.isPlaying())
                 titleMusic.play();
 
             title.update();
-            // title.draw();
             continue;
         }
 
         if(titleMusic.isPlaying())
                 titleMusic.stop();
 
-        if(!bgMusic.isPlaying())
+        if(!bgMusic.isPlaying() && !gameClearSeq.gameClear && !gameOver.gameOver)
             bgMusic.play();
 
         const double deltaTime = Scene::DeltaTime();
@@ -273,6 +307,7 @@ void Main()
 
         if (map.currentLayer == map.layerCount - 1 && !boss.GetStatus() && !gameClear){
             gameClear = true;
+            gameClearSeq.gameClear = true;
             playerController.OnGameClear();
             currentScore += bossScore;
             effect.add<Spark>(boss.GetCollider().center,boss.GetCurretType());
@@ -340,5 +375,6 @@ void Main()
         }
 
         gameOver.update();
+        gameClearSeq.update();
     }
 }

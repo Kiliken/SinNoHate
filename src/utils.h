@@ -10,6 +10,7 @@
 #include "InGameUI.h"
 #include "LevelTitle.h"
 #include "GameOver.h"
+#include "GameClear.h"
 
 namespace UTILS
 {

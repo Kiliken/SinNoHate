@@ -24,8 +24,7 @@ public:
 	bool gameStarted = false;
 	bool startingSequence = false;
 	float startingSeqCounter = 0;
-	bool gameEndSequence = false;
-	double gameEndTimer = 0.0;
+
 
 private:
 	Button* playButton;
@@ -35,12 +34,6 @@ private:
 	const s3d::Texture start2{Resource(U"Assets/TitlescreenAssets/start2.png")};
 	const s3d::Texture p1{Resource(U"Assets/TitlescreenAssets/player1.png")};
 	const s3d::Texture p2{Resource(U"Assets/TitlescreenAssets/player2.png")};
-	const s3d::Texture p3{Resource(U"Assets/TitlescreenAssets/3.png")};
-	const s3d::Texture p4{Resource(U"Assets/TitlescreenAssets/4.png")};
-	const s3d::Texture p5{Resource(U"Assets/TitlescreenAssets/5.png")};
-	const s3d::Texture p6{Resource(U"Assets/TitlescreenAssets/6.png")};
-	const s3d::Texture p7{Resource(U"Assets/TitlescreenAssets/7.png")};
-	const s3d::Texture p8{Resource(U"Assets/TitlescreenAssets/8.png")};
 	const s3d::Texture title1{Resource(U"Assets/TitlescreenAssets/title1.png")};
 	const s3d::Texture title2{Resource(U"Assets/TitlescreenAssets/title2.png")};
 	const s3d::Texture cloudr1{Resource(U"Assets/TitlescreenAssets/cloudright1.png")};
@@ -49,8 +42,7 @@ private:
 	const s3d::Texture cloudl2{Resource(U"Assets/TitlescreenAssets/cloudleft2.png")};
 	const s3d::Texture inferno{Resource(U"Assets/TitlescreenAssets/inferno.png")};
 	const s3d::Texture entry{Resource(U"Assets/TitlescreenAssets/entrys.png")};
-	const s3d::Texture finalGlow{Resource(U"Assets/TitlescreenAssets/FinalGlow.png")};
-	const s3d::Texture finalFloor{Resource(U"Assets/TitlescreenAssets/FinalFloor.png")};
+
 
 
 	Vec2 basePos = Vec2(Scene::Width()/2, Scene::Height()/2);
@@ -61,8 +53,7 @@ private:
 	Vec2 entryPos = Vec2(Scene::Width()/2, Scene::Height()/2 + 600);
 	Vec2 playerSpriteCallibration = Vec2(1,9);
 
-	Vec2 bottomPos = Vec2(Scene::Width()/2, Scene::Height() + 600);
-	Vec2 playerEndPos = Vec2(Scene::Width()/2, Scene::Height()/2 - 300);
+
 
 
 };

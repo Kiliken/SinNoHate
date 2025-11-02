@@ -124,6 +124,7 @@ void Map::ResetMap()
     spawningTraps = true;
 
     layerSwitched = false;
+    reverseScroll = false;
 
     //Console << U"Map reset";
 }
