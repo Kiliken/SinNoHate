@@ -11,7 +11,7 @@ bool BulletBase::IsActive()
     return m_isActive;
 }
 
-BulletBase::BulletBase(Vec2 firstPosition, Vec2 firstDirection, double radius, int layerIndex)
+BulletBase::BulletBase(Vec2 firstPosition, Vec2 firstDirection, double radius, int layerIndex, int penetration)
 {
     m_isActive = true;
     m_position = firstPosition;
@@ -23,6 +23,7 @@ BulletBase::BulletBase(Vec2 firstPosition, Vec2 firstDirection, double radius, i
     m_collider = Circle{ m_position, m_radius };
     m_moveDirection = firstDirection;
     m_color = Palette::Red;
+    m_penetration = penetration;
 }
 
 void BulletBase::Init(Vec2 firstPosition, Vec2 firstDirection, int radius)
@@ -53,7 +54,16 @@ void BulletBase::Draw()
     m_sprite((64 * x),0,64,64).resized(m_radius / 10 * 64).rotated(angle).drawAt(m_position);
 }
 
-void BulletBase::OnHit()
+void BulletBase::OnHit(bool isBoss)
 {
-    m_isActive = false;
+    if (isBoss) {
+        m_penetration = 0;
+    } else {
+        m_penetration --;
+    }
+    
+    if (m_penetration <= 0) {
+        m_isActive = false;
+    }
+    
 }

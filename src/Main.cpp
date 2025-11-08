@@ -300,7 +300,7 @@ void Main()
             {
                 if (bullet->GetCollider()->intersects(boss.GetCollider()))
                 {
-                    bullet->OnHit();
+                    bullet->OnHit(true);
                     boss.GetDamage();
                     break;
                 }

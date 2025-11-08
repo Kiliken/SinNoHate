@@ -155,7 +155,7 @@ void PlayerController::Shot()
             }
         }
         // ない場合、新たに生成
-        BulletBase* bullet = new BulletBase{ m_shotPos, m_aimDirection, m_bulletRadius, m_currentLayer };
+        BulletBase* bullet = new BulletBase{ m_shotPos, m_aimDirection, m_bulletRadius, m_currentLayer ,m_bulletPenetration};
         m_shotable = false;
         m_crossHairAnim = Async([this]() {CrossHairAnimation(m_shotCoolTime, Scene::DeltaTime());});
         m_bullets << bullet;
@@ -260,6 +260,7 @@ void PlayerController::UpGrade_ExpansionBullet(double expansValue)
     if (m_hasGameClear) return;
     if (m_hasGameOver) return;
     m_bulletRadius += expansValue;
+    m_bulletPenetration += 1;
     OnDownLayer();
 }
 

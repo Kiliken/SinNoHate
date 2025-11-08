@@ -12,6 +12,7 @@ class BulletBase{
 
         Color m_color;
         double m_radius;
+        int m_penetration;
         Vec2 m_moveDirection;
         Vec2 m_position;
 
@@ -22,7 +23,7 @@ class BulletBase{
     public:
         bool IsActive();
 
-        BulletBase(Vec2 firstPosition, Vec2 firstDirection, double radius, int layerIndex);
+        BulletBase(Vec2 firstPosition, Vec2 firstDirection, double radius, int layerIndex, int penetration);
 
         void Init(Vec2 firstPosition, Vec2 firstDirection, int radius);
 
@@ -30,7 +31,7 @@ class BulletBase{
 
         void Draw();
 
-        void OnHit();
+        void OnHit(bool isBoss = false);
 
         Circle* GetCollider() { return &m_collider; }
 };
