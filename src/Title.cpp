@@ -25,19 +25,33 @@ void Title::update()
 	{
 		startingSequence = true;
 		gameStarted = true;
+
 	}
 
-	// if (quitButton->clicked())
-	// {
-	// 	// Transition to game scene
-	// 	System::Exit();
-	// }
+
 
 	if (startingSequence) {
+
 		startingSeqCounter += deltaTime;
+
+		const uint64 t = Time::GetMillisec();
+        const uint32 x = t / 30 % 2;
+
+        if(x == 1 && n != x && y < 9){
+            n = x;
+            y++;
+
+        }
+
+        if(x == 0) 
+            n = 0;
+
+
+		
 		if (startingSeqCounter <= 1)  {
 			cloudLPos += deltaTime * Vec2(-350, 0);
 			cloudRPos += deltaTime * Vec2(350, 0);
+			
 		}
 		else if (startingSeqCounter <= 1.65) {
 			fallingPos -= deltaTime * Vec2(0, 450);
@@ -60,6 +74,10 @@ void Title::reset()
     startingSequence = false;
     startingSeqCounter = 0.0;
     gameStarted = false;
+	animFin = false;
+	y = 0;
+
+	
 
     // Reset all positions
     basePos = Vec2(Scene::Width() / 2, Scene::Height() / 2);
@@ -77,12 +95,30 @@ void Title::reset()
 void Title::draw()
 {
 	Scene::SetBackground(ColorF{ 0.3, 0.3, 0.3 });
-	if (startingSequence || playButton->hovered()){
+	if (startingSequence){
+		bg2.drawAt(skyPos);
+		title2.drawAt(fallingPos);
+		cloudl2.drawAt(cloudLPos);
+		cloudr2.drawAt(cloudRPos);
+
+		if (!animFin) startAnim((520 * y),0,520,480).drawAt(fallingPos);
+		if (y == 8) {
+			animFin = true;
+		}
+		
+		
+		entry.drawAt(entryPos);
+		if (startingSeqCounter < 2.35) {
+			p2.drawAt(basePos + playerSpriteCallibration);
+		}
+
+	} else if (playButton->hovered()){
 		bg2.drawAt(skyPos);
 		title2.drawAt(fallingPos);
 		cloudl2.drawAt(cloudLPos);
 		cloudr2.drawAt(cloudRPos);
 		start2.drawAt(fallingPos);
+
 		entry.drawAt(entryPos);
 		if (startingSeqCounter < 2.35) {
 			p2.drawAt(basePos + playerSpriteCallibration);

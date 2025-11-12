@@ -32,6 +32,7 @@ private:
 	const s3d::Texture bg2{Resource(U"Assets/TitlescreenAssets/background2.png")};
 	const s3d::Texture start1{Resource(U"Assets/TitlescreenAssets/start1.png")};
 	const s3d::Texture start2{Resource(U"Assets/TitlescreenAssets/start2.png")};
+	const s3d::Texture startAnim{Resource(U"Assets/TitlescreenAssets/startButtonSpritesheet.png")};
 	const s3d::Texture p1{Resource(U"Assets/TitlescreenAssets/player1.png")};
 	const s3d::Texture p2{Resource(U"Assets/TitlescreenAssets/player2.png")};
 	const s3d::Texture title1{Resource(U"Assets/TitlescreenAssets/title1.png")};
@@ -44,6 +45,9 @@ private:
 	const s3d::Texture entry{Resource(U"Assets/TitlescreenAssets/entrys.png")};
 
 
+	bool animFin = false;
+
+
 
 	Vec2 basePos = Vec2(Scene::Width()/2, Scene::Height()/2);
 	Vec2 skyPos = Vec2(Scene::Width()/2, Scene::Height()/2);
@@ -52,6 +56,9 @@ private:
 	Vec2 fallingPos = Vec2(Scene::Width()/2, Scene::Height()/2);
 	Vec2 entryPos = Vec2(Scene::Width()/2, Scene::Height()/2 + 600);
 	Vec2 playerSpriteCallibration = Vec2(1,9);
+
+	uint32 n = 0;
+	uint32 y = 0;
 
 
 
