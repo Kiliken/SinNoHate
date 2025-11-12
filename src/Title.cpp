@@ -37,7 +37,7 @@ void Title::update()
 		const uint64 t = Time::GetMillisec();
         const uint32 x = t / 30 % 2;
 
-        if(x == 1 && n != x && y < 9){
+        if(x == 1 && n != x && y < 8){
             n = x;
             y++;
 
@@ -102,7 +102,7 @@ void Title::draw()
 		cloudr2.drawAt(cloudRPos);
 
 		if (!animFin) startAnim((520 * y),0,520,480).drawAt(fallingPos);
-		if (y == 8) {
+		if (y == 7) {
 			animFin = true;
 		}
 		
